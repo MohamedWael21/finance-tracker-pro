@@ -1,0 +1,14 @@
+@if (isLoading()) {
+  <div
+    [class]="`relative overflow-hidden bg-gray-300 dark:bg-gray-700 ${classes}`"
+    [style]="{
+      width: width(),
+      height: height(),
+      'border-radius': rounded,
+    }"
+  >
+    <div class="absolute inset-0 shimmer"></div>
+  </div>
+} @else {
+  <ng-content />
+}
