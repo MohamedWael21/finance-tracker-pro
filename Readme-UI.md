@@ -204,3 +204,23 @@ Consistent header structure with title, subtitle, and action slot.
   <app-button actions variant="primary">Add Income</app-button>
 </app-page-header>
 ```
+
+---
+
+## 12. Skeleton — `<app-skeleton>`
+
+Placeholder loading states for content.
+
+- **Selector:** `app-skeleton`
+- **Inputs:**
+  - `isLoading` (required): Boolean to toggle shimmer vs content.
+  - `type`: `'text' | 'avatar' | 'card' | 'thumbnail'` (Default: `'text'`)
+  - `width`, `height`, `rounded`: Optional CSS strings.
+
+```html
+<app-skeleton [isLoading]="isDataLoading" type="card">
+  <app-card>
+    <app-card-content>Real data content here...</app-card-content>
+  </app-card>
+</app-skeleton>
+```
