@@ -1,0 +1,12 @@
+@if (showLabel()) {
+  <div class="flex items-center justify-between mb-1 text-sm text-muted-foreground">
+    <span>{{ percentage() | number: '1.0-0' }}%</span>
+  </div>
+}
+<div [class]="'w-full bg-muted rounded-full overflow-hidden ' + height()">
+  <div
+    class="h-full rounded-full transition-all duration-300"
+    [style.width.%]="percentage()"
+    [style.background-color]="barColor"
+  ></div>
+</div>

@@ -1,0 +1,20 @@
+<!-- Tab bar -->
+<div class="flex gap-2 border-b border-border">
+  @for (tab of tabs(); track tab.id) {
+    <button
+      [class]="
+        'px-4 py-2 border-b-2 transition-colors ' +
+        (isActive(tab.id)
+          ? 'border-primary text-primary'
+          : 'border-transparent text-muted-foreground hover:text-foreground')
+      "
+      (click)="selectTab(tab.id)"
+    >
+      {{ tab.label }}
+    </button>
+  }
+</div>
+
+<div class="mt-6">
+  <ng-content />
+</div>

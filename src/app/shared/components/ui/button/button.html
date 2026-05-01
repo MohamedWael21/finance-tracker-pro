@@ -1,1 +1,3 @@
-<p>button works!</p>
+<button [class]="baseStyles + ' ' + variantClass + ' ' + sizeClass" (click)="handleClick($event)">
+  <ng-content />
+</button>
