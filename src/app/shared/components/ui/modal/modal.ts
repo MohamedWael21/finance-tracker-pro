@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, model, input, output } from '@angular/core';
+
+const sizes = {
+  sm: 'max-w-md',
+  md: 'max-w-lg',
+  lg: 'max-w-2xl',
+};
 
 @Component({
   selector: 'app-modal',
@@ -6,14 +12,21 @@ import { Component } from '@angular/core';
   templateUrl: './modal.html',
 })
 export class Modal {
-  isOpen = false;
+  isOpen = model<boolean>(false);
 
-  open() {
-    this.isOpen = true;
+  title = input<string>('');
+
+  size = input<keyof typeof sizes>('sm');
+
+  closed = output<void>();
+
+  get sizeClass() {
+    return sizes[this.size()];
   }
 
   close() {
-    this.isOpen = false;
+    this.isOpen.set(false);
+    this.closed.emit();
   }
 
   stopEventPropagation(e: Event) {
