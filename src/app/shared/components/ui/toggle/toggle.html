@@ -1,0 +1,19 @@
+<label
+  class="relative inline-flex items-center gap-3 cursor-pointer"
+  [class.opacity-50]="disabled()"
+>
+  <div
+    class="relative w-11 h-6 rounded-full transition-colors duration-200"
+    [class.bg-primary]="checked()"
+    [class.bg-muted]="!checked()"
+    (click)="toggle()"
+  >
+    <div
+      class="absolute top-0.5 left-0.5 w-5 h-5 bg-white border border-border rounded-full shadow transition-transform duration-200"
+      [class.translate-x-5]="checked()"
+    ></div>
+  </div>
+  @if (label()) {
+    <span class="text-sm">{{ label() }}</span>
+  }
+</label>
