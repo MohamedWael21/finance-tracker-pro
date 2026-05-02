@@ -1,10 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { SafeHtml } from '@angular/platform-browser';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
-  content: string;
+  content: string | SafeHtml;
 }
 
 export interface ChatApiResponse {
