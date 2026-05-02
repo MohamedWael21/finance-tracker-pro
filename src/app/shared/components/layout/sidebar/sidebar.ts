@@ -31,7 +31,6 @@ interface NavItem {
     LucideFolderOpen,
     LucideWallet,
     LucideBarChart3,
-    LucideMessageSquare,
     LucideBell,
     LucideCreditCard,
     LucideCrown,
