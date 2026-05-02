@@ -1,13 +1,27 @@
-// File: chatbot.service.ts
-// Purpose: AI API communication
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-// TODO: [Dev5]
-// - Send message to backend/OpenAI
-// - Handle response
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
-import { Injectable } from '@angular/core';
+export interface ChatApiResponse {
+  success: boolean;
+  data: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ChatbotService {
-  sendMessage(message: string) {}
+  private http = inject(HttpClient);
+  private endpoint = `http://localhost:5000/chatBot`;
+
+  sendMessage(messages: ChatMessage[]): Observable<ChatApiResponse> {
+    return this.http.post<ChatApiResponse>(
+      this.endpoint,
+      { messages },
+      { withCredentials: true }
+    );
+  }
 }
