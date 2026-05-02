@@ -5,7 +5,6 @@ import { LucideSearch, LucideBell, LucideUser, LucideCrown } from '@lucide/angul
 
 @Component({
   selector: 'app-header',
-  standalone: true,
   imports: [RouterLink, Button, LucideSearch, LucideBell, LucideUser, LucideCrown],
   templateUrl: './header.html',
 })
