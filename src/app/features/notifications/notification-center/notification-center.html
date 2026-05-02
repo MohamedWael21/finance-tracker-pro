@@ -1,1 +1,101 @@
-<p>notification-center works!</p>
+<div class="max-w-2xl mx-auto px-4 py-8">
+  <!-- Header -->
+  <app-page-header title="Notifications" subtitle="Stay on top of your financial activity">
+    <ng-container actions>
+      @if (unreadCount() > 0) {
+        <app-badge variant="default">{{ unreadCount() }} unread</app-badge>
+      }
+    </ng-container>
+  </app-page-header>
+
+  <div class="mt-8">
+    @if (loading()) {
+      <div class="flex flex-col gap-3">
+        @for (i of [1,2,3,4]; track i) {
+          <app-skeleton [isLoading]="true" type="card" />
+        }
+      </div>
+    }
+
+    @else if (error()) {
+      <app-empty-state
+        title="Could not load notifications"
+        [description]="error()"
+        iconBg="bg-red-50"
+      >
+        <svg icon width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--destructive)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <app-button action variant="outline" (click)="load()">Try again</app-button>
+      </app-empty-state>
+    }
+
+    @else if (notifications().length === 0) {
+      <app-empty-state
+        title="All caught up!"
+        description="You have no notifications right now."
+        iconBg="bg-accent"
+      >
+        <svg icon width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </app-empty-state>
+    }
+
+    @else {
+      <div class="flex flex-col gap-3">
+        @for (notif of notifications(); track notif._id) {
+          <app-card [styles]="notif.isRead ? '' : 'border-primary/30 bg-accent/30'">
+            <div class="p-4 flex items-start gap-4">
+              <div [class]="'shrink-0 w-10 h-10 rounded-full flex items-center justify-center ' + iconBg(notif.title)">
+                @if (notif.title === 'budget_alert') {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-600"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                } @else if (notif.title === 'expense_added') {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                } @else {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                }
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-0.5">
+                  <span class="text-sm font-semibold text-foreground capitalize">{{ titleLabel(notif.title) }}</span>
+                  @if (!notif.isRead) {
+                    <span class="inline-block w-2 h-2 rounded-full bg-primary shrink-0"></span>
+                  }
+                </div>
+                <p class="text-sm text-muted-foreground leading-relaxed">{{ notif.message }}</p>
+                <p class="text-xs text-muted-foreground mt-1.5 opacity-70">{{ formatDate(notif.createdAt) }}</p>
+              </div>
+
+              <div class="flex items-center gap-1 shrink-0">
+                @if (!notif.isRead) {
+                  <button
+                    class="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-primary"
+                    title="Mark as read"
+                    [disabled]="actionLoading() === notif._id + '-read'"
+                    (click)="markAsRead(notif)"
+                  >
+                    @if (actionLoading() === notif._id + '-read') {
+                      <svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                    } @else {
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    }
+                  </button>
+                }
+                <button
+                  class="p-2 rounded-lg hover:bg-red-50 transition-colors text-muted-foreground hover:text-destructive"
+                  title="Delete"
+                  [disabled]="actionLoading() === notif._id + '-delete'"
+                  (click)="deleteNotification(notif)"
+                >
+                  @if (actionLoading() === notif._id + '-delete') {
+                    <svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                  } @else {
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+                  }
+                </button>
+              </div>
+            </div>
+          </app-card>
+        }
+      </div>
+    }
+  </div>
+</div>

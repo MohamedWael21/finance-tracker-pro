@@ -56,8 +56,8 @@
         <div
           class="max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed"
           [class]="bubbleClass(msg.role)"
+          [innerHTML]="msg.content"
         >
-          {{ msg.content }}
         </div>
 
         @if (msg.role === 'user') {
