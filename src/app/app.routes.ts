@@ -17,5 +17,25 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/reports/reports.component').then(m => m.ReportsComponent),
     canActivate: [authGuard, premiumGuard]
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/auth/login/login').then(m => m.Login),
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./features/auth/register/register').then(m => m.Register),
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./features/profile/profile.component').then(m => m.ProfileComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];

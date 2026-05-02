@@ -7,14 +7,63 @@
 // - Store token in localStorage
 // - Handle current user
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../services/api.service';
+import { AuthResponse, User } from '../../types/user';
+import { Router } from '@angular/router';
+import { getCookies, setCookies } from '../../utils/cookie.utils';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private api: ApiService) {}
+  private apiService = inject(ApiService);
+  private router = inject(Router);
+  
 
-  login(data: any) {}
-  register(data: any) {}
-  logout() {}
+  login(credentials: Partial<User>) {
+    this.apiService.post<AuthResponse>('/auth/login', credentials).subscribe({
+      next:(res)=> {
+        console.log(res);;
+        this.router.navigate(['/profile']);
+      },
+      error(err) {
+        console.log(err);
+        alert(err.message);
+      },
+    });
+
+  }
+
+  register(data: Partial<User>) {
+    this.apiService.post<AuthResponse>('/auth/register', data).subscribe({
+      next:(res)=> {
+        console.log(res);
+        this.router.navigate(['/login']);
+      },
+      error(err) {
+        console.log(err);
+        alert(err.message);
+      },
+    });
+  }
+  logout() {
+    this.apiService.post('/auth/logout', {}).subscribe({
+      next:(res)=> {
+        console.log(res);
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.log(err);
+        this.router.navigate(['/login']);
+      },
+    });
+
+  }
+
+  isLoggedIn() {
+    const token = getCookies('token')
+    if(token) return token;
+    return false;
+  }
+
+
 }
