@@ -1,0 +1,16 @@
+<app-card>
+  <app-card-header>
+    <app-card-title>{{ title() }}</app-card-title>
+  </app-card-header>
+  <app-card-content>
+    <div class="relative h-87.5 w-full mt-4">
+      <canvas
+        baseChart
+        [data]="chartData()"
+        [options]="chartOptions"
+        [type]="'line'"
+      >
+      </canvas>
+    </div>
+  </app-card-content>
+</app-card>
