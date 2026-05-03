@@ -3,6 +3,12 @@ import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card/card';
 
+export interface ChartSeries {
+  label: string;
+  data: number[];
+  color: string;
+}
+
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.html',
@@ -10,31 +16,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card/card';
   imports: [BaseChartDirective, Card, CardHeader, CardTitle, CardContent],
 })
 export class BarChart {
-  title = input<string>('Income vs Expenses');
-  labels = input<string[]>(['Jan', 'Feb', 'Mar', 'Apr']);
-  incomeData = input<number[]>([4000, 4500, 3800, 5200]);
-  expensesData = input<number[]>([5000, 5200, 4800, 5500]);
+  title = input<string>('Chart Overview');
+  labels = input<string[]>([]);
+  datasets = input<ChartSeries[]>([]);
 
   chartData = computed<ChartData<'bar'>>(() => ({
     labels: this.labels(),
-    datasets: [
-      {
-        label: 'Income',
-        data: this.incomeData(),
-        backgroundColor: '#10b981',
-        borderRadius: 8,
-        borderSkipped: false,
-        barThickness: 50,
-      },
-      {
-        label: 'Expenses',
-        data: this.expensesData(),
-        backgroundColor: '#ef4444',
-        borderRadius: 8,
-        borderSkipped: false,
-        barThickness: 50,
-      },
-    ],
+    datasets: this.datasets().map((ds) => ({
+      label: ds.label,
+      data: ds.data,
+      backgroundColor: ds.color,
+      borderRadius: 8,
+      borderSkipped: false,
+      barThickness: 50,
+    })),
   }));
 
   chartOptions: ChartOptions<'bar'> = {

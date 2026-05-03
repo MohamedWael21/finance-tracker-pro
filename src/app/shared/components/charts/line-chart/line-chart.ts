@@ -3,6 +3,12 @@ import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card/card';
 
+export interface ChartSeries {
+  label: string;
+  data: number[];
+  color: string;
+}
+
 @Component({
   selector: 'app-line-chart',
   templateUrl: './line-chart.html',
@@ -10,56 +16,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card/card';
   imports: [BaseChartDirective, Card, CardHeader, CardTitle, CardContent],
 })
 export class LineChart {
-  title = input<string>('Monthly Trends');
-  labels = input<string[]>(['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr']);
-  incomeData = input<number[]>([4800, 5000, 5200, 5000, 5200, 4800, 5500]);
-  expensesData = input<number[]>([3200, 3400, 3500, 3300, 3600, 3400, 3800]);
-  savingsData = input<number[]>([1600, 1600, 1700, 1700, 1600, 1400, 1700]);
+  title = input<string>('Trends Overview');
+  labels = input<string[]>([]);
+  datasets = input<ChartSeries[]>([]);
 
   chartData = computed<ChartData<'line'>>(() => ({
     labels: this.labels(),
-    datasets: [
-      {
-        label: 'Income',
-        data: this.incomeData(),
-        borderColor: '#10b981',
-        backgroundColor: '#10b981',
-        pointBackgroundColor: '#ffffff',
-        pointBorderColor: '#10b981',
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        tension: 0.4,
-        borderWidth: 2,
-        
-      },
-      {
-        label: 'Expenses',
-        data: this.expensesData(),
-        borderColor: '#ef4444',
-        backgroundColor: '#ef4444',
-        pointBackgroundColor: '#ffffff',
-        pointBorderColor: '#ef4444',
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        tension: 0.4,
-        borderWidth: 2,
-      },
-      {
-        label: 'Savings',
-        data: this.savingsData(),
-        borderColor: '#7c3aed',
-        backgroundColor: '#7c3aed',
-        pointBackgroundColor: '#ffffff',
-        pointBorderColor: '#7c3aed',
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        tension: 0.4,
-        borderWidth: 2,
-      },
-    ],
+    datasets: this.datasets().map((ds) => ({
+      label: ds.label,
+      data: ds.data,
+      borderColor: ds.color,
+      backgroundColor: ds.color,
+      pointBackgroundColor: '#ffffff',
+      pointBorderColor: ds.color,
+      pointBorderWidth: 2,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      tension: 0.4,
+      borderWidth: 2,
+    })),
   }));
 
   chartOptions: ChartOptions<'line'> = {
