@@ -8,7 +8,7 @@ import { ToastContainer } from '../../ui/toast/toast-container';
 
 @Component({
   selector: 'app-root-layout',
-  imports: [RouterOutlet, Sidebar, FloatingChat, header , ToastContainer],
+  imports: [RouterOutlet, Sidebar, FloatingChat, header, ToastContainer],
   templateUrl: './root-layout.html',
 })
 export class RootLayout {}

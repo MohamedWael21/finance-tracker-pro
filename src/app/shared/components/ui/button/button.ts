@@ -22,6 +22,7 @@ export class Button {
   variant = input<keyof typeof variants>('primary');
   size = input<keyof typeof sizes>('md');
   click = output<Event>();
+  disabled = input<boolean>(false);
 
   baseStyles =
     'inline-flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
