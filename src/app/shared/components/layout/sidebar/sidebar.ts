@@ -6,13 +6,14 @@ import {
   LucideFolderOpen,
   LucideWallet,
   LucideBarChart3,
-  LucideMessageSquare,
   LucideBell,
   LucideCreditCard,
   LucideCrown,
   LucideLock,
+  LucideX,
 } from '@lucide/angular';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { SidebarService } from '../../../../core/services/sidebar.service';
 
 interface NavItem {
   path: string;
@@ -36,11 +37,13 @@ interface NavItem {
     LucideCreditCard,
     LucideCrown,
     LucideLock,
+    LucideX,
   ],
   templateUrl: './sidebar.html',
 })
 export class Sidebar {
   authService = inject(AuthService);
+  sidebarService = inject(SidebarService);
 
   isPremium = computed(() => {
     return this.authService.currentUser()?.plan === 'premium';

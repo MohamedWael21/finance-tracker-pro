@@ -1,11 +1,30 @@
-<aside class="w-64 bg-sidebar border-r border-sidebar-border h-screen flex flex-col">
-  <div class="p-6">
+@if (sidebarService.isOpen()) {
+  <div
+    (click)="sidebarService.close()"
+    class="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
+  ></div>
+}
+
+<aside
+  [class.translate-x-0]="sidebarService.isOpen()"
+  [class.-translate-x-full]="!sidebarService.isOpen()"
+  class="fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border h-screen flex flex-col transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0"
+>
+  <div class="p-6 flex items-center justify-between">
     <div class="flex items-center gap-2">
       <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
         <svg lucideWallet class="w-5 h-5 text-primary-foreground"></svg>
       </div>
       <span class="font-medium text-sidebar-foreground">FinanceTracker</span>
     </div>
+
+    <button
+      (click)="sidebarService.close()"
+      class="p-2 hover:bg-sidebar-accent rounded-lg lg:hidden"
+      type="button"
+    >
+      <svg lucideX class="w-5 h-5 text-sidebar-foreground"></svg>
+    </button>
   </div>
 
   <nav class="flex-1 px-3 space-y-1">
@@ -14,6 +33,7 @@
         [routerLink]="item.path"
         routerLinkActive="bg-sidebar-primary text-sidebar-primary-foreground"
         [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+        (click)="sidebarService.close()"
         #rla="routerLinkActive"
         [class]="rla.isActive ? '' : 'text-sidebar-foreground hover:bg-sidebar-accent'"
         class="flex items-center justify-between px-3 py-2 rounded-lg transition-colors cursor-pointer"

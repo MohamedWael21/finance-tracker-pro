@@ -1,23 +1,25 @@
 import { Component, signal, inject, computed, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Button } from '../../ui/button/button';
-import { LucideSearch, LucideBell, LucideCrown } from '@lucide/angular';
+import { LucideSearch, LucideBell, LucideCrown, LucideMenu } from '@lucide/angular';
 import { AuthService } from '../../../../core/auth/auth.service';
 import {
   Notification,
   NotificationApiService,
 } from '../../../../core/services/notification.service';
+import { SidebarService } from '../../../../core/services/sidebar.service';
 import { TimeAgoPipe } from '../../../pipes/time-ago';
 
 const MAX_NUM_NOTIFICATIONS = 5;
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, Button, LucideSearch, LucideBell, LucideCrown, TimeAgoPipe],
+  imports: [RouterLink, Button, LucideSearch, LucideBell, LucideCrown, LucideMenu, TimeAgoPipe],
   templateUrl: './header.html',
 })
 export class header implements OnInit {
   authService = inject(AuthService);
   notificationService = inject(NotificationApiService);
+  sidebarService = inject(SidebarService);
 
   notifications = signal<Notification[] | null>(null);
 
