@@ -40,8 +40,8 @@ export class AuthService {
 
   register(data: RegisterRequest): Observable<AuthResponse> {
     return this.apiService.post<AuthResponse>('/auth/register', data).pipe(
-      tap((res) => {
-        this.handleAuthSuccess(res);
+      tap(() => {
+        this.router.navigate(['/auth/login']);
       })
     );
   }
