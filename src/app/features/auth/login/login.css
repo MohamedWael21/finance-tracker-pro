@@ -1,0 +1,17 @@
+@reference "../../../../styles.css";
+
+.login-container {
+  @apply flex flex-col items-center justify-center;
+}
+
+.login-content {
+  @apply w-full;
+}
+
+.login-body {
+  @apply mt-6;
+}
+
+.login-footer {
+  @apply mt-6;
+}

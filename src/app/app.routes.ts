@@ -24,6 +24,12 @@ export const routes: Routes = [
           import('./features/reports/reports.component').then((m) => m.ReportsComponent),
         canActivate: [authGuard, premiumGuard],
       },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile.component').then((m) => m.ProfileComponent),
+        canActivate: [authGuard],
+      },
     ],
   },
   {
@@ -39,5 +45,9 @@ export const routes: Routes = [
         loadComponent: () => import('./features/auth/register/register').then((m) => m.Register),
       },
     ],
+  },
+  {
+    path: '**',
+    redirectTo: '',
   },
 ];

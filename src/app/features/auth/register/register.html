@@ -1,1 +1,35 @@
-<p>register works!</p>
+<div class="register-container border border-grey-500 border-1 rounded-lg p-6 max-w-md mx-auto mt-10">
+  <div class="register-content">
+    <div class="register-header text-center mb-8">
+      <p class="text-xl font-semibold">Create your account</p>
+      <p class="text-muted-foreground mt-2">Start tracking your finances today</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-body flex flex-col gap-5">
+      <app-input class="block" label="Full Name" placeholder="Enter your name" [error]="getErrorMessage('name')"
+        (valueChange)="registerForm.get('name')?.setValue($event)"></app-input>
+
+      <app-input class="block" label="Email Address" placeholder="Enter your email" type="email"
+        [error]="getErrorMessage('email')" (valueChange)="registerForm.get('email')?.setValue($event)"></app-input>
+
+      <app-input class="block" label="Password" placeholder="Enter your password" type="password"
+        [error]="getErrorMessage('password')"
+        (valueChange)="registerForm.get('password')?.setValue($event)"></app-input>
+
+      <app-input class="block" label="Confirm Password" placeholder="Confirm your password" type="password"
+        [error]="getErrorMessage('confirmPassword')"
+        (valueChange)="registerForm.get('confirmPassword')?.setValue($event)"></app-input>
+
+      <app-button type="submit" [fullWidth]="true" class="mt-2">
+        Register
+      </app-button>
+    </form>
+
+    <div class="register-footer mt-8 text-center">
+      <p class="text-sm text-muted-foreground">
+        Already have an account?
+        <a href="/auth/login" class="text-primary hover:underline font-medium">Log in</a>
+      </p>
+    </div>
+  </div>
+</div>
