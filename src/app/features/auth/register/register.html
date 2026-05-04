@@ -1,18 +1,35 @@
-<div style="padding: 20px; max-width: 400px; margin: 50px auto; border: 1px solid #ccc; border-radius: 8px;">
-  <h2 style="text-align: center;">Test Register</h2>
-  <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
-    <div style="margin-bottom: 15px;">
-      <label style="display: block; margin-bottom: 5px;">Name:</label>
-      <input type="text" name="name" [(ngModel)]="userData.name" required style="width: 100%; padding: 8px; box-sizing: border-box;">
+<div class="register-container border border-grey-500 border-1 rounded-lg p-6 max-w-md mx-auto mt-10">
+  <div class="register-content">
+    <div class="register-header text-center mb-8">
+      <p class="text-xl font-semibold">Create your account</p>
+      <p class="text-muted-foreground mt-2">Start tracking your finances today</p>
     </div>
-    <div style="margin-bottom: 15px;">
-      <label style="display: block; margin-bottom: 5px;">Email:</label>
-      <input type="email" name="email" [(ngModel)]="userData.email" required style="width: 100%; padding: 8px; box-sizing: border-box;">
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-body flex flex-col gap-5">
+      <app-input class="block" label="Full Name" placeholder="Enter your name" [error]="getErrorMessage('name')"
+        (valueChange)="registerForm.get('name')?.setValue($event)"></app-input>
+
+      <app-input class="block" label="Email Address" placeholder="Enter your email" type="email"
+        [error]="getErrorMessage('email')" (valueChange)="registerForm.get('email')?.setValue($event)"></app-input>
+
+      <app-input class="block" label="Password" placeholder="Enter your password" type="password"
+        [error]="getErrorMessage('password')"
+        (valueChange)="registerForm.get('password')?.setValue($event)"></app-input>
+
+      <app-input class="block" label="Confirm Password" placeholder="Confirm your password" type="password"
+        [error]="getErrorMessage('confirmPassword')"
+        (valueChange)="registerForm.get('confirmPassword')?.setValue($event)"></app-input>
+
+      <app-button type="submit" [fullWidth]="true" class="mt-2">
+        Register
+      </app-button>
+    </form>
+
+    <div class="register-footer mt-8 text-center">
+      <p class="text-sm text-muted-foreground">
+        Already have an account?
+        <a href="/auth/login" class="text-primary hover:underline font-medium">Log in</a>
+      </p>
     </div>
-    <div style="margin-bottom: 15px;">
-      <label style="display: block; margin-bottom: 5px;">Password:</label>
-      <input type="password" name="password" [(ngModel)]="userData.password" required style="width: 100%; padding: 8px; box-sizing: border-box;">
-    </div>
-    <button type="submit" [disabled]="!registerForm.valid" style="width: 100%; padding: 10px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 4px;">Register</button>
-  </form>
+  </div>
 </div>

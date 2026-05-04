@@ -1,0 +1,17 @@
+@reference "../../../../styles.css";
+
+.register-container {
+  @apply flex flex-col items-center justify-center;
+}
+
+.register-content {
+  @apply w-full;
+}
+
+.register-body {
+  @apply mt-6;
+}
+
+.register-footer {
+  @apply mt-6;
+}

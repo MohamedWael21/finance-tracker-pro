@@ -21,10 +21,16 @@ const sizes = {
 export class Button {
   variant = input<keyof typeof variants>('primary');
   size = input<keyof typeof sizes>('md');
+  fullWidth = input<boolean>(false);
+  type = input<'button' | 'submit' | 'reset'>('button');
   click = output<Event>();
 
   baseStyles =
     'inline-flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
+
+  get widthClass() {
+    return this.fullWidth() ? 'w-full' : '';
+  }
 
   get variantClass() {
     return variants[this.variant()];
