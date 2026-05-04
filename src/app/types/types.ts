@@ -3,7 +3,8 @@ export interface User {
   password: string;
   name: string;
   role: string;
-  avatar: string;
+  avatar: { secure_url: string; public_id: string };
+  plan: 'free' | 'premium';
 }
 
 export interface AuthResponse {

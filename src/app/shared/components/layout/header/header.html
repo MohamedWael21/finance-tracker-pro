@@ -14,7 +14,7 @@
   </div>
 
   <div class="flex items-center gap-4">
-    @if (!userService.isPremium()) {
+    @if (!isPremium()) {
       <a routerLink="/pricing">
         <app-button variant="primary" size="sm">
           <svg lucideCrown class="w-4 h-4 mr-2"></svg>
@@ -30,8 +30,11 @@
         class="p-2 hover:bg-accent rounded-lg transition-colors relative"
       >
         <svg lucideBell class="w-5 h-5"></svg>
-        @if (notificationService.unreadCount() > 0) {
-          <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
+        @if (unreadCount() > 0) {
+          <span
+            class="absolute -top-0.5 text-xs text-white right-0 w-4 h-4 bg-destructive rounded-full"
+            >{{ unreadCount() }}</span
+          >
         }
       </button>
 
@@ -41,9 +44,9 @@
         >
           <div class="flex items-center justify-between mb-3">
             <h3 class="font-semibold text-foreground">Notifications</h3>
-            @if (notificationService.unreadCount() > 0) {
+            @if (unreadCount() > 0) {
               <button
-                (click)="notificationService.markAllAsRead()"
+                (click)="markAllAsRead()"
                 class="text-xs text-primary hover:underline cursor-pointer"
               >
                 Mark all read
@@ -51,19 +54,21 @@
             }
           </div>
           <div class="space-y-2 max-h-80 overflow-y-auto">
-            @for (notification of notificationService.notifications(); track notification.id) {
+            @for (notification of notifications(); track notification._id) {
               <div
                 [class]="
-                  notification.read
+                  notification.isRead
                     ? 'p-3 hover:bg-accent rounded-lg transition-colors cursor-pointer'
                     : 'p-3 bg-accent rounded-lg transition-colors cursor-pointer'
                 "
-                (click)="notificationService.markAsRead(notification.id)"
+                (click)="markAsRead(notification._id)"
               >
-                <p class="text-sm" [class.font-medium]="!notification.read">
+                <p class="text-sm" [class.font-medium]="!notification.isRead">
                   {{ notification.message }}
                 </p>
-                <span class="text-xs text-muted-foreground">{{ notification.time }}</span>
+                <span class="text-xs text-muted-foreground">{{
+                  notification.createdAt | timeAgo
+                }}</span>
               </div>
             } @empty {
               <div class="p-4 text-center text-sm text-muted-foreground">No notifications</div>
@@ -86,8 +91,8 @@
         (click)="toggleUserMenu()"
         class="flex items-center gap-2 p-2 hover:bg-accent rounded-lg transition-colors"
       >
-        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-          <svg lucideUser class="w-5 h-5 text-primary-foreground"></svg>
+        <div class="w-8 h-8 rounded-full flex items-center justify-center">
+          <img [src]="avatar()" class="w-full h-full rounded-full" alt="profile picture" />
         </div>
       </button>
 
@@ -102,13 +107,12 @@
           >
             Profile
           </a>
-          <a
-            routerLink="/auth/login"
-            (click)="showUserMenu.set(false)"
-            class="block px-4 py-2 hover:bg-accent transition-colors"
+          <button
+            (click)="handleLogout()"
+            class="block w-full text-left cursor-pointer text-destructive px-4 py-2 hover:bg-accent transition-colors"
           >
             Logout
-          </a>
+          </button>
         </div>
       }
     </div>
