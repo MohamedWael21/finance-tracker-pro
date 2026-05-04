@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   LucideLayoutDashboard,
@@ -12,6 +12,7 @@ import {
   LucideCrown,
   LucideLock,
 } from '@lucide/angular';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 interface NavItem {
   path: string;
@@ -39,8 +40,11 @@ interface NavItem {
   templateUrl: './sidebar.html',
 })
 export class Sidebar {
-  // placeholder
-  userService = { isPremium: () => true };
+  authService = inject(AuthService);
+
+  isPremium = computed(() => {
+    return this.authService.currentUser()?.plan === 'premium';
+  });
 
   navItems: NavItem[] = [
     { path: '/', label: 'Dashboard', icon: 'LayoutDashboard', premium: false },

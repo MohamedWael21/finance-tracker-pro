@@ -46,7 +46,7 @@
         </div>
         @if (item.premium) {
           <div class="flex items-center gap-1">
-            @if (userService.isPremium()) {
+            @if (isPremium()) {
               <svg lucideCrown class="w-4 h-4 text-primary"></svg>
             } @else {
               <svg lucideLock class="w-4 h-4 text-muted-foreground"></svg>
