@@ -11,8 +11,10 @@ export class AuthService {
   private router = inject(Router);
 
   private _currentUser = signal<User | null>(null);
-  
+
   readonly currentUser = computed(() => this._currentUser());
+
+  plan = computed(() => this._currentUser()?.plan || 'free');
 
   constructor() {
     this.rehydrateUser();
@@ -48,14 +50,14 @@ export class AuthService {
 
   private handleAuthSuccess(res: AuthResponse) {
     localStorage.setItem('user', JSON.stringify(res.user));
-    this._currentUser.set(res.user); 
+    this._currentUser.set(res.user);
     this.router.navigate(['/']);
   }
 
   logout() {
     this.apiService.post('/auth/logout', {}).subscribe({
       next: () => this.handleLogout(),
-      error: () => this.handleLogout(), 
+      error: () => this.handleLogout(),
     });
   }
 

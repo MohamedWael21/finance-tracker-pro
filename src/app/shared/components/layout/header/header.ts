@@ -27,7 +27,7 @@ export class header implements OnInit {
   showUserMenu = signal(false);
 
   isPremium = computed(() => {
-    return this.authService.currentUser()?.plan === 'premium';
+    return this.authService.plan() === 'premium';
   });
 
   avatar = computed(() => {

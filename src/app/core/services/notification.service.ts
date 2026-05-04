@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, pipe, repeat, switchMap, timer } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
 
 
 export interface Notification {
@@ -21,7 +23,7 @@ export interface ApiResponse<T> {
 @Injectable({ providedIn: 'root' })
 export class NotificationApiService {
   private http = inject(HttpClient);
-  private base = `http://localhost:5000/api/v1/notifications`;
+  private base = environment.notification;
 
   getAll(): Observable<ApiResponse<Notification[]>> {
     return this.http.get<ApiResponse<Notification[]>>(this.base, { withCredentials: true });
