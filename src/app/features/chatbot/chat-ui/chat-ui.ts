@@ -1,9 +1,9 @@
-import {
-  Component, inject, signal, ViewChild, ElementRef, AfterViewChecked
-} from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChatbotService, ChatMessage } from '../chatbot.service';
-// import { ToastService } from '../../../core/services/toast.service';
+import {marked} from 'marked';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-chat-ui',
@@ -13,7 +13,8 @@ import { ChatbotService, ChatMessage } from '../chatbot.service';
 })
 export class ChatUi implements AfterViewChecked {
   private chatbot = inject(ChatbotService);
-  // private toast = inject(ToastService);
+  private toast = inject(ToastService);
+  private sanitizer = inject(DomSanitizer);
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('inputEl') inputEl!: ElementRef<HTMLTextAreaElement>;
@@ -56,7 +57,7 @@ export class ChatUi implements AfterViewChecked {
     if (!content || this.loading()) return;
 
     const userMsg: ChatMessage = { role: 'user', content };
-    this.messages.update(msgs => [...msgs, userMsg]);
+    this.messages.update((msgs) => [...msgs, userMsg]);
     this.inputValue = '';
     this.resetTextarea();
     this.shouldScroll = true;
@@ -64,16 +65,19 @@ export class ChatUi implements AfterViewChecked {
     this.loading.set(true);
 
     this.chatbot.sendMessage(this.messages()).subscribe({
-      next: res => {
-        const assistantMsg: ChatMessage = { role: 'assistant', content: res.data };
-        this.messages.update(msgs => [...msgs, assistantMsg]);
+      next:async (res) => {
+        const html = await marked.parse(res.data);
+        const msg : SafeHtml = this.sanitizer.bypassSecurityTrustHtml(html);
+        const assistantMsg: ChatMessage = { role: 'assistant', content: msg };
+        this.messages.update((msgs) => [...msgs, assistantMsg]);
         this.loading.set(false);
         this.shouldScroll = true;
       },
-      error: err => {
+      error: (err) => {
         this.loading.set(false);
-        // this.toast.error(err?.error?.message || 'Failed to get a response. Please try again.');
-      }
+        console.log(err)
+        this.toast.error(err?.error?.message || 'Failed to get a response. Please try again.');
+      },
     });
   }
 

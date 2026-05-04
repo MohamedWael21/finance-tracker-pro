@@ -1,11 +1,23 @@
-// File: payment.service.ts
-// Purpose: Handle Stripe payments
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-// TODO: [Dev5]
-// - Create payment intent
-// - Handle success/failure
 
-import { Injectable } from '@angular/core';
+interface PaymentIntentResponse {
+  success: boolean;
+  clientSecret: string;
+}
 
 @Injectable({ providedIn: 'root' })
-export class PaymentService {}
+export class PaymentService {
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:5000/api/v1';
+
+  createPaymentIntent(): Observable<PaymentIntentResponse> {
+    return this.http.post<PaymentIntentResponse>(
+      `${this.apiUrl}/payment/create-payment-intent`,
+      {},
+      { withCredentials: true } 
+    );
+  }
+}

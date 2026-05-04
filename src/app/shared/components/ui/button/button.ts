@@ -24,6 +24,7 @@ export class Button {
   fullWidth = input<boolean>(false);
   type = input<'button' | 'submit' | 'reset'>('button');
   click = output<Event>();
+  disabled = input<boolean>(false);
 
   baseStyles =
     'inline-flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';

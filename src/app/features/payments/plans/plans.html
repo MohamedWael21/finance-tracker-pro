@@ -1,1 +1,176 @@
-<p>plans works!</p>
+<div class="max-w-4xl mx-auto px-4 py-10">
+
+  <div class="text-center mb-12">
+    <app-badge variant="default" styles="mb-4">Simple Pricing</app-badge>
+    <h1 class="text-3xl font-semibold text-foreground mt-2">Choose Your Plan</h1>
+    <p class="text-muted-foreground mt-2 text-base">
+      Start for free, upgrade when you're ready.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <app-card>
+      <app-card-header>
+        <div class="flex items-center justify-between">
+          <app-card-title>Free</app-card-title>
+          <app-badge variant="outline">Current Plan</app-badge>
+        </div>
+        <p class="text-muted-foreground text-sm mt-1">Everything you need to get started.</p>
+      </app-card-header>
+
+      <app-card-content>
+        <div class="mb-6">
+          <span class="text-4xl font-semibold text-foreground">$0</span>
+          <span class="text-muted-foreground text-sm ml-1">/ forever</span>
+        </div>
+        <ul class="flex flex-col gap-3 text-sm">
+          @for (feature of freeFeatures; track feature) {
+            <li class="flex items-center gap-2 text-foreground">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="var(--secondary)" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+              {{ feature }}
+            </li>
+          }
+          @for (feature of freeDisabled; track feature) {
+            <li class="flex items-center gap-2 text-muted-foreground line-through">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18M6 6l12 12"/>
+              </svg>
+              {{ feature }}
+            </li>
+          }
+        </ul>
+      </app-card-content>
+
+      <app-card-footer>
+        <app-button variant="outline" class="w-full" [disabled]="true">
+          Current Plan
+        </app-button>
+      </app-card-footer>
+    </app-card>
+
+    <app-card styles="border-primary/50 shadow-lg shadow-primary/10 relative overflow-visible">
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+        <app-badge variant="default" styles="px-4 py-1 shadow-sm">✨ Most Popular</app-badge>
+      </div>
+
+      <app-card-header>
+        <div class="flex items-center justify-between">
+          <app-card-title>Premium</app-card-title>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="var(--primary)" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="m2 4 3 12h14l3-12-6 5-4-5-4 5-6-5z"/>
+          </svg>
+        </div>
+        <p class="text-muted-foreground text-sm mt-1">Unlock all features, no limits.</p>
+      </app-card-header>
+
+      <app-card-content>
+        <div class="mb-6">
+          <span class="text-4xl font-semibold text-foreground">$9.99</span>
+          <span class="text-muted-foreground text-sm ml-1">/ one-time</span>
+        </div>
+        <ul class="flex flex-col gap-3 text-sm">
+          @for (feature of premiumFeatures; track feature) {
+            <li class="flex items-center gap-2 text-foreground">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="var(--secondary)" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+              {{ feature }}
+            </li>
+          }
+        </ul>
+      </app-card-content>
+
+      <app-card-footer>
+        <app-button
+          variant="primary"
+          class="w-full"
+          [disabled]="!stripeReady()"
+          (click)="openPaymentForm()"
+        >
+          @if (!stripeReady()) { Loading... } @else { Upgrade Now — $9.99 }
+        </app-button>
+      </app-card-footer>
+    </app-card>
+
+  </div>
+</div>
+
+<app-modal
+  title="Complete Your Purchase"
+  [(isOpen)]="showPaymentForm"
+  size="sm"
+  (closed)="cancelPayment()"
+>
+
+  <div class="flex items-center justify-between p-3 bg-accent rounded-xl mb-5 text-sm">
+    <div class="flex items-center gap-2">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+        stroke="var(--primary)" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="m2 4 3 12h14l3-12-6 5-4-5-4 5-6-5z"/>
+      </svg>
+      <span class="font-medium text-foreground">Premium Plan</span>
+    </div>
+    <span class="font-semibold text-foreground">$9.99</span>
+  </div>
+
+  <div class="mb-1">
+    <label class="block text-sm font-medium text-foreground mb-2">Card Details</label>
+    <div
+      id="card-element"
+      class="w-full px-4 py-3 border border-border rounded-xl bg-background
+             focus-within:ring-2 focus-within:ring-ring transition-all min-h-[46px]"
+    ></div>
+
+    @if (cardError()) {
+      <p class="text-sm text-destructive mt-2 flex items-center gap-1">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+        </svg>
+        {{ cardError() }}
+      </p>
+    }
+  </div>
+
+  <div footer class="flex gap-3 w-full">
+    <app-button
+      variant="outline"
+      class="flex-1"
+      [disabled]="loading()"
+      (click)="cancelPayment()"
+    >
+      Cancel
+    </app-button>
+
+    <app-button
+      variant="primary"
+      class="flex-1"
+      [disabled]="loading() || !!cardError()"
+      (click)="handlePayment()"
+    >
+      @if (loading()) {
+        <svg class="animate-spin mr-2" width="16" height="16"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+        </svg>
+        Processing...
+      } @else {
+        Pay $9.99
+      }
+    </app-button>
+  </div>
+
+</app-modal>
