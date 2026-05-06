@@ -1,0 +1,389 @@
+<div class="max-w-3xl mx-auto px-4 py-8 space-y-6">
+  <div>
+    <h1 class="text-2xl font-semibold text-foreground">Account Settings</h1>
+    <p class="text-sm text-muted-foreground mt-1">Manage your profile, security, and account preferences</p>
+  </div>
+  <div class="bg-card border border-border rounded-2xl p-6 shadow-sm">
+
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold text-card-foreground m-0">Profile Photo</h2>
+      <p class="text-sm text-muted-foreground mt-0.5">Click your photo to upload a new one (PNG or JPEG)</p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center gap-6">
+
+      <div class="relative shrink-0 group">
+        <button
+          type="button"
+          (click)="triggerFileInput()"
+          class="relative w-24 h-24 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-ring"
+          [disabled]="isUploadingAvatar() || isDeletingAvatar()"
+          title="Click to change photo"
+        >
+          @if (avatarPreviewUrl() || avatarUrl()) {
+            <img
+              [src]="avatarPreviewUrl() || avatarUrl()"
+              alt="User avatar"
+              class="w-full h-full object-cover border-4 border-border shadow-md rounded-full"
+            />
+          } @else {
+            <div class="w-full h-full rounded-full bg-accent flex items-center justify-center border-4 border-border shadow-md">
+              <span class="text-2xl font-semibold text-accent-foreground">{{ initials() }}</span>
+            </div>
+          }
+
+          @if (!isUploadingAvatar() && !isDeletingAvatar()) {
+            <div class="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+          }
+
+          @if (isUploadingAvatar() || isDeletingAvatar()) {
+            <div class="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center">
+              <svg class="animate-spin text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+            </div>
+          }
+        </button>
+        @if (avatarPreviewUrl()) {
+          <span class="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded-full font-medium">
+            Preview
+          </span>
+        }
+      </div>
+
+      <input
+        id="avatar-file-input"
+        type="file"
+        accept="image/png,image/jpeg"
+        class="hidden"
+        (change)="onFileSelected($event)"
+      />
+
+      <div class="flex flex-col gap-3">
+        @if (avatarPreviewUrl()) {
+          <div class="flex items-center gap-3">
+            <app-button variant="primary" size="sm" [disabled]="isUploadingAvatar()" (click)="uploadAvatar()">
+              @if (isUploadingAvatar()) {
+                <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+                Uploading…
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Save Photo
+              }
+            </app-button>
+            <app-button variant="outline" size="sm" [disabled]="isUploadingAvatar()" (click)="cancelAvatarPreview()">
+              Cancel
+            </app-button>
+          </div>
+        } @else {
+          <div class="flex flex-col gap-2">
+            <p class="text-sm text-muted-foreground">
+              Click the photo above to select a new image.
+            </p>
+            @if (avatarUrl()) {
+              <app-button variant="danger" size="sm" [disabled]="isDeletingAvatar()" (click)="deleteAvatar()">
+                @if (isDeletingAvatar()) {
+                  <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                  </svg>
+                  Removing…
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                  </svg>
+                  Remove Photo
+                }
+              </app-button>
+            }
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bg-card border border-border rounded-2xl p-6 shadow-sm">
+
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="text-lg font-semibold text-card-foreground m-0">Profile Information</h2>
+        <p class="text-sm text-muted-foreground mt-0.5">Update your name and email address</p>
+      </div>
+      @if (!isEditingProfile()) {
+        <app-button variant="outline" size="sm" (click)="startEditingProfile()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+            <path d="m15 5 4 4"/>
+          </svg>
+          Edit
+        </app-button>
+      }
+    </div>
+
+    @if (!isEditingProfile()) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        @if (isLoadingProfile()) {
+          @for (i of [1,2,3,4]; track i) {
+            <div class="space-y-2">
+              <div class="h-3 w-16 bg-muted rounded animate-pulse"></div>
+              <div class="h-5 w-40 bg-muted rounded animate-pulse"></div>
+            </div>
+          }
+        } @else {
+          <div class="space-y-1">
+            <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Full Name</p>
+            <p class="text-sm font-medium text-card-foreground">{{ profile()?.name || '—' }}</p>
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Email Address</p>
+            <p class="text-sm font-medium text-card-foreground">{{ profile()?.email || '—' }}</p>
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Role</p>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent text-accent-foreground capitalize">
+              {{ profile()?.role || '—' }}
+            </span>
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Plan</p>
+            <span [class]="profile()?.plan === 'premium'
+              ? 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary/15 text-secondary'
+              : 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground'">
+              {{ profile()?.plan === 'premium' ? '⭐ Premium' : 'Free' }}
+            </span>
+          </div>
+        }
+      </div>
+    }
+
+    @if (isEditingProfile()) {
+      <form (ngSubmit)="submitProfile()" class="space-y-5 max-w-md" #profileForm="ngForm">
+
+        <div>
+          <app-input
+            label="Full Name"
+            placeholder="John Doe"
+            type="text"
+            name="editName"
+            [(value)]="editName"
+            [error]="nameError"
+            (valueChange)="editName = $event; nameError = ''"
+          />
+        </div>
+
+        <div>
+          <app-input
+            label="Email Address"
+            placeholder="john@example.com"
+            type="email"
+            name="editEmail"
+            [(value)]="editEmail"
+            [error]="emailError"
+            (valueChange)="editEmail = $event; emailError = ''"
+          />
+        </div>
+
+        <div class="flex items-center gap-3 pt-1">
+          <app-button type="submit" variant="primary" [disabled]="isUpdatingProfile()">
+            @if (isUpdatingProfile()) {
+              <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+              Saving…
+            } @else {
+              Save Changes
+            }
+          </app-button>
+          <app-button type="button" variant="outline" [disabled]="isUpdatingProfile()" (click)="cancelEditingProfile()">
+            Cancel
+          </app-button>
+        </div>
+
+      </form>
+    }
+
+  </div>
+
+  <div class="bg-card border border-border rounded-2xl p-6 shadow-sm">
+
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <div>
+          <h2 class="text-lg font-semibold text-card-foreground m-0">Security Settings</h2>
+          <p class="text-sm text-muted-foreground">Manage your password</p>
+        </div>
+      </div>
+
+      @if (!showPasswordForm()) {
+        <span (click)="togglePasswordForm()" class="cursor-pointer">
+          <app-button variant="outline" size="sm" >
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          Change Password
+        </app-button>
+        </span>
+
+      }
+    </div>
+    @if (showPasswordForm()) {
+      <form (ngSubmit)="submitChangePassword()" class="space-y-5 max-w-md">
+
+        <div>
+          <app-input
+            label="Current Password"
+            placeholder="••••••••"
+            type="password"
+            name="oldPassword"
+            [(value)]="oldPassword"
+            [error]="oldPasswordError"
+            (valueChange)="oldPassword = $event; oldPasswordError = ''"
+          />
+        </div>
+
+        <div>
+          <app-input
+            label="New Password"
+            placeholder="••••••••"
+            type="password"
+            name="newPassword"
+            [(value)]="newPassword"
+            [error]="newPasswordError"
+            (valueChange)="newPassword = $event; newPasswordError = ''"
+          />
+        </div>
+
+        <div>
+          <app-input
+            label="Confirm New Password"
+            placeholder="••••••••"
+            type="password"
+            name="confirmPassword"
+            [(value)]="confirmPassword"
+            [error]="confirmPasswordError"
+            (valueChange)="confirmPassword = $event; confirmPasswordError = ''"
+          />
+        </div>
+
+        <div class="flex items-center gap-3 pt-1">
+          <app-button type="submit" variant="primary" [disabled]="isChangingPassword()">
+            @if (isChangingPassword()) {
+              <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+              Updating…
+            } @else {
+              Update Password
+            }
+          </app-button>
+          <app-button type="button" variant="outline" [disabled]="isChangingPassword()" (click)="cancelPasswordChange()">
+            Cancel
+          </app-button>
+        </div>
+
+      </form>
+    }
+
+  </div>
+
+  <div class="bg-card border border-destructive/30 rounded-2xl p-6 shadow-sm">
+
+    <div class="flex items-center gap-2 mb-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-destructive">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+        <path d="M12 9v4"/><path d="M12 17h.01"/>
+      </svg>
+      <h2 class="text-lg font-semibold text-card-foreground m-0">Danger Zone</h2>
+    </div>
+    <p class="text-sm text-muted-foreground mb-6">
+      Permanently delete your account and all associated data. This action cannot be undone.
+    </p>
+
+    <app-button variant="danger" (click)="openDeleteModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+        <line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>
+      </svg>
+      Delete Account
+    </app-button>
+
+  </div>
+
+</div>
+
+<app-modal
+  [(isOpen)]="isDeleteModalOpen"
+  title="Delete Account"
+  size="sm"
+  (closed)="closeDeleteModal()"
+>
+  <div class="space-y-4">
+
+    <div class="flex items-start gap-3 p-4 rounded-xl bg-destructive/10 border border-destructive/20">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-destructive shrink-0 mt-0.5">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+        <path d="M12 9v4"/><path d="M12 17h.01"/>
+      </svg>
+      <div>
+        <p class="text-sm font-semibold text-destructive">This action is permanent</p>
+        <p class="text-sm text-muted-foreground mt-1">
+          All your data — transactions, budgets, categories, and settings — will be deleted immediately and cannot be recovered.
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-sm text-muted-foreground mb-2">
+        Type <span class="font-bold font-mono text-foreground">{{ DELETE_PHRASE }}</span> to confirm:
+      </p>
+      <app-input
+        placeholder="Type DELETE to confirm"
+        type="text"
+        name="deleteConfirm"
+        [value]="deleteConfirmText()"
+        (valueChange)="deleteConfirmText.set($event)"
+      />
+    </div>
+
+  </div>
+
+  <ng-container footer>
+    <app-button variant="outline" (click)="closeDeleteModal()">Cancel</app-button>
+    <app-button
+      variant="danger"
+      [disabled]="!isDeleteConfirmed() || isDeletingAccount()"
+      (click)="confirmDeleteAccount()"
+    >
+      @if (isDeletingAccount()) {
+        <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+        </svg>
+        Deleting…
+      } @else {
+        Delete My Account
+      }
+    </app-button>
+  </ng-container>
+
+</app-modal>

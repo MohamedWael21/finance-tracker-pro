@@ -35,6 +35,12 @@ export class ApiService {
       .pipe(catchError(handleHttpError));
   }
 
+  put<T>(url: string, body: any): Observable<T> {
+    return this.http
+      .put<T>(`${environment.baseURL}${url}`, body, { withCredentials: true })
+      .pipe(catchError(handleHttpError));
+  }
+
   delete<T>(url: string): Observable<T> {
     return this.http
       .delete<T>(`${environment.baseURL}${url}`, { withCredentials: true })
