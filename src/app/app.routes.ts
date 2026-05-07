@@ -26,7 +26,7 @@ export const routes: Routes = [
       {
         path: 'reports',
         loadComponent: () => import('./features/reports/reports/reports').then((m) => m.Reports),
-        canActivate: [authGuard], //premiumGuard
+        canActivate: [authGuard, premiumGuard],
       },
       {
         path: 'profile',
@@ -36,8 +36,7 @@ export const routes: Routes = [
       },
       {
         path: 'categories',
-        loadChildren: () =>
-          import('./features/categories/routes').then((m) => m.CATEGORY_ROUTES),
+        loadChildren: () => import('./features/categories/routes').then((m) => m.CATEGORY_ROUTES),
         canActivate: [authGuard],
       },
       {
@@ -48,8 +47,7 @@ export const routes: Routes = [
       },
       {
         path: 'budgets',
-        loadChildren: () =>
-          import('./features/budgets/routes').then((m) => m.BUDGET_ROUTES),
+        loadChildren: () => import('./features/budgets/routes').then((m) => m.BUDGET_ROUTES),
         canActivate: [authGuard],
       },
     ],
