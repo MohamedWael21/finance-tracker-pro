@@ -6,6 +6,16 @@ import { AuthLayout } from './shared/components/layout/auth-layout/auth-layout';
 
 export const routes: Routes = [
   {
+    path: 'reset-password',
+    component: AuthLayout,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/auth/reset-password/reset-password').then((m) => m.ResetPassword),
+      }
+    ]
+  },
+  {
     path: '',
     component: RootLayout,
     children: [
@@ -87,6 +97,18 @@ export const routes: Routes = [
       {
         path: 'register',
         loadComponent: () => import('./features/auth/register/register').then((m) => m.Register),
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () => import('./features/auth/forgot-password/forgot-password').then((m) => m.ForgotPassword),
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () => import('./features/auth/reset-password/reset-password').then((m) => m.ResetPassword),
+      },
+      {
+        path: 'reset-password-confirm/:token',
+        loadComponent: () => import('./features/auth/reset-password/reset-password').then((m) => m.ResetPassword),
       },
     ],
   },
