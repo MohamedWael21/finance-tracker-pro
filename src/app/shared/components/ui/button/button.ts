@@ -25,6 +25,7 @@ export class Button {
   type = input<'button' | 'submit' | 'reset'>('button');
   click = output<Event>();
   disabled = input<boolean>(false);
+  title = input<string>('');
 
   baseStyles =
     'inline-flex items-center justify-center rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
@@ -41,6 +42,12 @@ export class Button {
   }
 
   handleClick(event: Event) {
+    if (this.disabled()) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    event.stopPropagation();
     this.click.emit(event);
   }
 }

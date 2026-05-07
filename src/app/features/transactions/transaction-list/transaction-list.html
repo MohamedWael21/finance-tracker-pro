@@ -1,1 +1,208 @@
-<p>transaction-list works!</p>
+<div class="flex flex-col gap-6">
+  <app-page-header title="Transactions" subtitle="Manage your income and expenses">
+    <div actions>
+      <app-button (click)="openAddModal()">
+        <svg lucidePlus class="w-4 h-4"></svg>
+        Add Transaction
+      </app-button>
+    </div>
+  </app-page-header>
+
+  <app-card>
+    <div class="p-6">
+      <div class="flex flex-wrap gap-4 items-end mb-6">
+        <div class="flex-1 min-w-[200px]">
+          <label class="block text-sm font-medium mb-1">Search</label>
+          <app-input
+            [value]="searchFilter()"
+            (valueChange)="onSearchChange($event)"
+            placeholder="Search description..."
+          ></app-input>
+        </div>
+
+        <div class="w-40">
+          <label class="block text-sm font-medium mb-1">Type</label>
+          <app-select
+            [value]="typeFilter()"
+            (valueChange)="onTypeChange($event)"
+            [options]="typeOptions"
+          ></app-select>
+        </div>
+
+        <div class="w-40">
+          <label class="block text-sm font-medium mb-1">Start Date</label>
+          <app-input
+            type="date"
+            [value]="startDate()"
+            (valueChange)="onStartDateChange($event)"
+          ></app-input>
+        </div>
+
+        <div class="w-40">
+          <label class="block text-sm font-medium mb-1">End Date</label>
+          <app-input
+            type="date"
+            [value]="endDate()"
+            (valueChange)="onEndDateChange($event)"
+          ></app-input>
+        </div>
+
+        <div class="w-32">
+          <label class="block text-sm font-medium mb-1">Min Amount</label>
+          <app-input
+            type="number"
+            [value]="minAmount() ?? null"
+            (valueChange)="onMinAmountChange($event)"
+            placeholder="0"
+          ></app-input>
+        </div>
+
+        <div class="w-32">
+          <label class="block text-sm font-medium mb-1">Max Amount</label>
+          <app-input
+            type="number"
+            [value]="maxAmount() ?? null"
+            (valueChange)="onMaxAmountChange($event)"
+            placeholder="Any"
+          ></app-input>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b text-sm text-muted-foreground">
+              <th class="py-3 font-medium">Date</th>
+              <th class="py-3 font-medium">Description</th>
+              <th class="py-3 font-medium">Category</th>
+              <th class="py-3 font-medium">Type</th>
+              <th class="py-3 font-medium">Recurring</th>
+              <th class="py-3 font-medium text-right">Amount</th>
+              <th class="py-3 font-medium text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (transaction of transactions(); track transaction._id) {
+              <tr class="border-b hover:bg-muted/50 transition-colors">
+                <td class="py-4">{{ transaction.date | date: 'MMM d, yyyy' }}</td>
+                <td class="py-4 font-medium">{{ transaction.description || 'No description' }}</td>
+                <td class="py-4">
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [style.background-color]="getCategoryColor(transaction) + '20'"
+                    [style.color]="getCategoryColor(transaction)"
+                  >
+                    {{ getCategoryName(transaction) }}
+                  </span>
+                </td>
+                <td class="py-4">
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [class.bg-green-100]="transaction.type === 'income'"
+                    [class.text-green-700]="transaction.type === 'income'"
+                    [class.bg-red-100]="transaction.type === 'expense'"
+                    [class.text-red-700]="transaction.type === 'expense'"
+                  >
+                    {{ transaction.type === 'income' ? 'Income' : 'Expense' }}
+                  </span>
+                </td>
+                <td class="py-4">
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [class.bg-primary/10]="transaction.isRecurring"
+                    [class.text-primary]="transaction.isRecurring"
+                    [class.bg-muted]="!transaction.isRecurring"
+                    [class.text-muted-foreground]="!transaction.isRecurring"
+                  >
+                    {{ transaction.isRecurring ? 'Yes' : 'No' }}
+                  </span>
+                </td>
+                <td
+                  class="py-4 text-right font-medium font-mono"
+                  [class.text-green-600]="transaction.type === 'income'"
+                  [class.text-red-600]="transaction.type === 'expense'"
+                >
+                  {{ transaction.type === 'income' ? '+' : '-' }}${{
+                    transaction.amount | number: '1.2-2'
+                  }}
+                </td>
+                <td class="py-4 text-right">
+                  <div class="flex justify-end gap-2">
+                    <button
+                      title="Edit"
+                      class="text-muted-foreground hover:text-foreground transition-colors p-1"
+                      (click)="openEditModal(transaction)"
+                    >
+                      <svg lucidePencil class="w-4 h-4"></svg>
+                    </button>
+                    <button
+                      title="Delete"
+                      class="text-destructive/70 hover:text-destructive transition-colors p-1"
+                      (click)="openDeleteModal(transaction)"
+                    >
+                      <svg lucideTrash2 class="w-4 h-4"></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="py-12 text-center text-muted-foreground">
+                  @if (loading()) {
+                    Loading transactions...
+                  } @else {
+                    No transactions found.
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-between items-center mt-6">
+        <button
+          class="text-sm px-3 py-1 border rounded disabled:opacity-50"
+          [disabled]="currentPage() <= 1"
+          (click)="changePage(currentPage() - 1)"
+        >
+          Previous
+        </button>
+        <span class="text-sm text-muted-foreground">Page {{ currentPage() }}</span>
+        <button
+          class="text-sm px-3 py-1 border rounded disabled:opacity-50"
+          [disabled]="currentPage() >= totalPages()"
+          (click)="changePage(currentPage() + 1)"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </app-card>
+</div>
+
+<app-transaction-form
+  [(isOpen)]="isModalOpen"
+  [transactionToEdit]="selectedTransaction()"
+  (saved)="onSaved()"
+></app-transaction-form>
+
+<app-modal [(isOpen)]="deleteModalOpen" title="Delete Transaction" size="sm">
+  <div class="space-y-4">
+    <p>Are you sure you want to delete this transaction?</p>
+    <p class="text-sm text-muted-foreground">
+      {{ selectedTransactionToDelete()?.description || 'No description' }} —
+      {{ selectedTransactionToDelete()?.type === 'income' ? '+' : '-' }}${{ selectedTransactionToDelete()?.amount | number: '1.2-2' }}
+    </p>
+  </div>
+
+  <ng-container footer>
+    <app-button variant="outline" (click)="closeDeleteModal()">Cancel</app-button>
+    <app-button
+      variant="danger"
+      (click)="selectedTransactionToDelete() && deleteTransaction(selectedTransactionToDelete()!._id)"
+    >
+      Delete
+    </app-button>
+  </ng-container>
+</app-modal>

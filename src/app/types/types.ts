@@ -1,9 +1,11 @@
 export interface User {
+  _id?: string;
   email: string;
-  password: string;
   name: string;
   role: string;
-  avatar: string;
+  avatar?: { secure_url: string; public_id: string } | null;
+  plan: 'free' | 'premium';
+  createdAt?: string;
 }
 
 export interface AuthResponse {
@@ -30,18 +32,4 @@ export interface ChatApiMessage {
 export interface ChatApiResponse {
   success: boolean;
   data: string;
-}
-
-export interface ResetPasswordInput {
-  email: string;
-}
-
-export interface ResetPasswordConfirmInput {
-  password: string;
-}
-
-export interface GenericAuthResponse {
-  success: boolean;
-  message: string;
-  token?: string;
 }

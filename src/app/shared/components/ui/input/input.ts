@@ -9,7 +9,8 @@ export class Input {
   label = input<string>('');
   placeholder = input<string>('');
   type = input<string>('text');
-  value = model<string>('');
+  value = model<any>('');
+  title = input<string>('');
   error = input<string>('');
   disabled = input<boolean>(false);
   required = input<boolean>(false);
@@ -21,5 +22,21 @@ export class Input {
 
   get inputStyles(): string {
     return `${this.baseInputStyles} ${this.error() ? 'border-destructive focus:ring-destructive' : 'border-border'}`;
+  }
+
+  handleInput(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (this.type() !== 'number') {
+      this.value.set(target.value);
+      return;
+    }
+
+    if (target.value === '') {
+      this.value.set(null);
+      return;
+    }
+
+    const numericValue = Number(target.value);
+    this.value.set(Number.isFinite(numericValue) ? numericValue : null);
   }
 }

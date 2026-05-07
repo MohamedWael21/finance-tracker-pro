@@ -8,7 +8,7 @@
 // - Handle errors globally
 
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { handleHttpError } from '../../utils/http-error.utils';
@@ -17,28 +17,33 @@ import { handleHttpError } from '../../utils/http-error.utils';
 export class ApiService {
   private http = inject(HttpClient);
 
-  get<T>(url: string): Observable<T> {
+  get<T>(url: string, params?: HttpParams): Observable<T> {
     return this.http
-      .get<T>(`${environment.baseURL}${url}`, { withCredentials: true })
+      .get<T>(`${environment.baseURL}${url}`, { withCredentials: true, params })
       .pipe(catchError(handleHttpError));
   }
 
-  post<T>(url: string, body: any): Observable<T> {
+  post<T>(url: string, body: any, params?: HttpParams): Observable<T> {
     return this.http
-      .post<T>(`${environment.baseURL}${url}`, body, { withCredentials: true })
+      .post<T>(`${environment.baseURL}${url}`, body, { withCredentials: true, params })
       .pipe(catchError(handleHttpError));
   }
 
-  patch<T>(url: string, body: any): Observable<T> {
+  put<T>(url: string, body: any, params?: HttpParams): Observable<T> {
     return this.http
-      .patch<T>(`${environment.baseURL}${url}`, body, { withCredentials: true })
+      .put<T>(`${environment.baseURL}${url}`, body, { withCredentials: true, params })
       .pipe(catchError(handleHttpError));
   }
 
-  delete<T>(url: string): Observable<T> {
+  patch<T>(url: string, body: any, params?: HttpParams): Observable<T> {
     return this.http
-      .delete<T>(`${environment.baseURL}${url}`, { withCredentials: true })
+      .patch<T>(`${environment.baseURL}${url}`, body, { withCredentials: true, params })
       .pipe(catchError(handleHttpError));
   }
 
+  delete<T>(url: string, params?: HttpParams): Observable<T> {
+    return this.http
+      .delete<T>(`${environment.baseURL}${url}`, { withCredentials: true, params })
+      .pipe(catchError(handleHttpError));
+  }
 }

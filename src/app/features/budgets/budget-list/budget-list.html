@@ -1,1 +1,112 @@
-<p>budget-list works!</p>
+<div class="flex flex-col gap-6">
+  <app-page-header title="Budgets" subtitle="Set and track spending limits by category">
+    <div actions>
+      <app-button (click)="openAddModal()">
+        <svg lucidePlus class="w-4 h-4"></svg>
+        Add Budget
+      </app-button>
+    </div>
+  </app-page-header>
+
+  <div class="flex flex-col gap-6">
+    @for (budget of budgets(); track budget._id) {
+      <app-card>
+        <div class="p-6 flex flex-col gap-4">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-semibold text-lg">{{ getCategoryName(budget) }}</h3>
+              <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>{{ getMonthName(budget.month) }} {{ budget.year }}</span>
+              </div>
+            </div>
+
+            <div class="text-right">
+              <div class="font-semibold text-lg">
+                ${{ budget.spent | number: '1.2-2' }} / ${{ budget.amount | number: '1.2-2' }}
+              </div>
+              <div
+                class="text-sm"
+                [class.text-destructive]="(budget.spent || 0) > budget.amount"
+                [class.text-muted-foreground]="(budget.spent || 0) <= budget.amount"
+              >
+                {{ getPercentage(budget) }}% used
+              </div>
+            </div>
+          </div>
+
+          <app-progress-bar
+            [value]="budget.spent || 0"
+            [max]="budget.amount"
+            [color]="getCategoryColor(budget)"
+          >
+          </app-progress-bar>
+
+          @if ((budget.spent || 0) > budget.amount) {
+            <div
+              class="bg-destructive/10 border border-destructive/20 text-destructive rounded-md p-3 flex items-center gap-2 text-sm mt-2"
+            >
+              <svg lucideAlertCircle class="w-4 h-4"></svg>
+              <span
+                >Budget exceeded by ${{
+                  (budget.spent || 0) - budget.amount | number: '1.2-2'
+                }}</span
+              >
+            </div>
+          }
+
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-sm text-muted-foreground"
+              >Remaining: ${{ getRemaining(budget) | number: '1.2-2' }}</span
+            >
+            <div class="flex gap-2">
+              <app-button variant="outline" size="sm" (click)="openEditModal(budget)">
+                Edit
+              </app-button>
+              <app-button variant="danger" size="sm" (click)="openDeleteModal(budget)">
+                Delete
+              </app-button>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    } @empty {
+      @if (!loading()) {
+        <div
+          class="text-center py-12 text-muted-foreground bg-muted/20 rounded-xl border border-dashed"
+        >
+          No budgets found. Create one to start tracking your spending.
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<app-budget-form
+  [(isOpen)]="isModalOpen"
+  [budgetToEdit]="selectedBudget()"
+  (saved)="onSaved()"
+></app-budget-form>
+
+<app-modal [(isOpen)]="deleteModalOpen" [title]="'Delete budget'" size="sm">
+  <div class="space-y-4">
+    <p>Are you sure you want to delete this budget?</p>
+    <p class="text-sm text-muted-foreground">
+      {{ selectedBudgetToDelete() ? getCategoryName(selectedBudgetToDelete()!) : '' }} - ${{
+        selectedBudgetToDelete() ? selectedBudgetToDelete()!.amount : (0 | number: '1.2-2')
+      }}
+    </p>
+  </div>
+
+  <ng-container footer>
+    <app-button variant="outline" (click)="closeDeleteModal()" [disabled]="deleteLoading()">
+      Cancel
+    </app-button>
+    <app-button
+      variant="danger"
+      (click)="selectedBudgetToDelete() && deleteBudget(selectedBudgetToDelete()!._id)"
+      [disabled]="deleteLoading()"
+    >
+      {{ deleteLoading() ? 'Deleting...' : 'Delete' }}
+    </app-button>
+  </ng-container>
+</app-modal>

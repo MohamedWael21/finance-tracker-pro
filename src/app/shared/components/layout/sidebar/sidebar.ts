@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   LucideLayoutDashboard,
@@ -6,12 +6,14 @@ import {
   LucideFolderOpen,
   LucideWallet,
   LucideBarChart3,
-  LucideMessageSquare,
   LucideBell,
   LucideCreditCard,
   LucideCrown,
   LucideLock,
+  LucideX,
 } from '@lucide/angular';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { SidebarService } from '../../../../core/services/sidebar.service';
 
 interface NavItem {
   path: string;
@@ -35,15 +37,20 @@ interface NavItem {
     LucideCreditCard,
     LucideCrown,
     LucideLock,
+    LucideX,
   ],
   templateUrl: './sidebar.html',
 })
 export class Sidebar {
-  // placeholder
-  userService = { isPremium: () => true };
+  authService = inject(AuthService);
+  sidebarService = inject(SidebarService);
+
+  isPremium = computed(() => {
+    return this.authService.currentUser()?.plan === 'premium';
+  });
 
   navItems: NavItem[] = [
-    { path: '/', label: 'Dashboard', icon: 'LayoutDashboard', premium: false },
+    { path: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard', premium: false },
     { path: '/transactions', label: 'Transactions', icon: 'Receipt', premium: false },
     { path: '/categories', label: 'Categories', icon: 'FolderOpen', premium: false },
     { path: '/budgets', label: 'Budgets', icon: 'Wallet', premium: false },

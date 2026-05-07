@@ -2,18 +2,25 @@ import { Component, computed, input } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card/card';
+import { LucideAngularModule, LayoutList } from 'lucide-angular';
 
 @Component({
   selector: 'app-horizontal-bar-chart',
   templateUrl: './horizontal-bar-chart.html',
   standalone: true,
-  imports: [BaseChartDirective, Card, CardHeader, CardTitle, CardContent],
+  imports: [BaseChartDirective, Card, CardHeader, CardTitle, CardContent, LucideAngularModule],
 })
 export class HorizontalBarChart {
+  readonly LayoutList = LayoutList;
   title = input<string>('Data Distribution');
   labels = input<string[]>([]);
   data = input<number[]>([]);
   color = input<string>('#7c3aed');
+
+  isEmpty = computed(() => {
+    const d = this.data();
+    return !d || d.length === 0 || d.every((v) => v === 0);
+  });
 
   chartData = computed<ChartData<'bar'>>(() => ({
     labels: this.labels(),

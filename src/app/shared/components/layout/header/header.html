@@ -1,24 +1,86 @@
-<header class="h-16 bg-card border-b border-border flex items-center justify-between px-6">
-  <div class="flex-1 max-w-md">
-    <div class="relative">
-      <svg
-        lucideSearch
-        class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"
-      ></svg>
-      <input
-        type="text"
-        placeholder="Search transactions, categories..."
-        class="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
-      />
+<header class="h-16 bg-card border-b border-border flex items-center justify-between px-4 lg:px-6">
+  <div class="flex items-center gap-4 flex-1">
+    <button
+      (click)="sidebarService.toggle()"
+      class="p-2 hover:bg-accent rounded-lg lg:hidden"
+      type="button"
+    >
+      <svg lucideMenu class="w-6 h-6 text-foreground"></svg>
+    </button>
+
+    <div class="hidden md:block flex-1 max-w-md">
+      <form (submit)="onSearch($event)" class="relative">
+        <svg lucideSearch class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"></svg>
+        <input
+          type="text"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchInput($event)"
+          (focus)="onSearchFocus()"
+          (blur)="onSearchBlur()"
+          autocomplete="off"
+          name="search"
+          placeholder="Search transactions, categories..."
+          class="w-full pl-10 pr-10 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+        />
+        @if (searchQuery()) {
+          <button
+            type="button"
+            (click)="clearSearch()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-accent rounded-full text-muted-foreground"
+          >
+            <svg lucideX class="w-4 h-4"></svg>
+          </button>
+        }
+
+        <!-- Global Search Results Dropdown -->
+        @if (showSearchResults() && searchQuery().trim()) {
+          <div class="absolute left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg z-50 max-h-96 overflow-y-auto w-[400px]">
+             @if (isSearching()) {
+                <div class="p-4 text-center text-sm text-muted-foreground">Searching...</div>
+             } @else {
+                @if (hasResults()) {
+                   @if (searchResults()?.transactions?.length) {
+                     <div class="p-2">
+                       <h3 class="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 mt-1">Transactions</h3>
+                       @for (tx of searchResults()?.transactions; track tx._id) {
+                          <a (click)="navigateTo('/transactions')" class="block px-3 py-2 text-sm hover:bg-accent rounded-md cursor-pointer transition-colors">
+                              <div class="flex justify-between items-center">
+                                 <span class="font-medium text-foreground">{{ tx.description || 'Unknown Transaction' }}</span>
+                                 <span [class]="tx.type === 'expense' ? 'text-destructive font-semibold' : 'text-primary font-semibold'">${{ tx.amount }}</span>
+                              </div>
+                          </a>
+                       }
+                     </div>
+                   }
+                   @if (searchResults()?.categories?.length) {
+                     <div class="p-2 border-t border-border">
+                       <h3 class="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 mt-1">Categories</h3>
+                       @for (cat of searchResults()?.categories; track cat._id) {
+                          <a (click)="navigateTo('/categories')" class="block px-3 py-2 text-sm hover:bg-accent rounded-md cursor-pointer transition-colors">
+                              <div class="flex items-center gap-2">
+                                 <div class="w-3 h-3 rounded-full" [style.backgroundColor]="cat.color"></div>
+                                 <span class="text-foreground">{{ cat.type }}</span>
+                              </div>
+                          </a>
+                       }
+                     </div>
+                   }
+                } @else {
+                   <div class="p-4 text-center text-sm text-muted-foreground">No results found for "{{ searchQuery() }}"</div>
+                }
+             }
+          </div>
+        }
+      </form>
     </div>
   </div>
 
   <div class="flex items-center gap-4">
-    @if (!userService.isPremium()) {
+    @if (!isPremium()) {
       <a routerLink="/pricing">
         <app-button variant="primary" size="sm">
-          <svg lucideCrown class="w-4 h-4 mr-2"></svg>
-          Upgrade to Premium
+          <svg lucideCrown class="w-4 h-4 lg:mr-2"></svg>
+          <span class="hidden lg:inline">Upgrade to Premium</span>
         </app-button>
       </a>
     }
@@ -30,8 +92,11 @@
         class="p-2 hover:bg-accent rounded-lg transition-colors relative"
       >
         <svg lucideBell class="w-5 h-5"></svg>
-        @if (notificationService.unreadCount() > 0) {
-          <span class="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
+        @if (unreadCount() > 0) {
+          <span
+            class="absolute -top-0.5 text-xs text-white right-0 w-4 h-4 bg-destructive rounded-full"
+            >{{ unreadCount() }}</span
+          >
         }
       </button>
 
@@ -41,9 +106,9 @@
         >
           <div class="flex items-center justify-between mb-3">
             <h3 class="font-semibold text-foreground">Notifications</h3>
-            @if (notificationService.unreadCount() > 0) {
+            @if (unreadCount() > 0) {
               <button
-                (click)="notificationService.markAllAsRead()"
+                (click)="markAllAsRead()"
                 class="text-xs text-primary hover:underline cursor-pointer"
               >
                 Mark all read
@@ -51,31 +116,33 @@
             }
           </div>
           <div class="space-y-2 max-h-80 overflow-y-auto">
-            @for (notification of notificationService.notifications(); track notification.id) {
+            @for (notification of notifications(); track notification._id) {
               <div
                 [class]="
-                  notification.read
+                  notification.isRead
                     ? 'p-3 hover:bg-accent rounded-lg transition-colors cursor-pointer'
                     : 'p-3 bg-accent rounded-lg transition-colors cursor-pointer'
                 "
-                (click)="notificationService.markAsRead(notification.id)"
+                (click)="markAsRead(notification._id)"
               >
-                <p class="text-sm" [class.font-medium]="!notification.read">
+                <p class="text-sm" [class.font-medium]="!notification.isRead">
                   {{ notification.message }}
                 </p>
-                <span class="text-xs text-muted-foreground">{{ notification.time }}</span>
+                <span class="text-xs text-muted-foreground">{{
+                  notification.createdAt | timeAgo
+                }}</span>
               </div>
             } @empty {
               <div class="p-4 text-center text-sm text-muted-foreground">No notifications</div>
             }
-            <a
-              routerLink="/notifications"
-              (click)="showNotifications.set(false)"
-              class="block text-center text-primary text-sm mt-2 hover:underline"
-            >
-              View all notifications
-            </a>
           </div>
+          <a
+            routerLink="/notifications"
+            (click)="showNotifications.set(false)"
+            class="block text-center text-primary text-sm mt-2 hover:underline"
+          >
+            View all notifications
+          </a>
         </div>
       }
     </div>
@@ -86,8 +153,8 @@
         (click)="toggleUserMenu()"
         class="flex items-center gap-2 p-2 hover:bg-accent rounded-lg transition-colors"
       >
-        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-          <svg lucideUser class="w-5 h-5 text-primary-foreground"></svg>
+        <div class="w-8 h-8 rounded-full flex items-center justify-center">
+          <img [src]="avatar()" class="w-full h-full rounded-full" alt="profile picture" />
         </div>
       </button>
 
@@ -102,13 +169,12 @@
           >
             Profile
           </a>
-          <a
-            routerLink="/auth/login"
-            (click)="showUserMenu.set(false)"
-            class="block px-4 py-2 hover:bg-accent transition-colors"
+          <button
+            (click)="handleLogout()"
+            class="block w-full text-left cursor-pointer text-destructive px-4 py-2 hover:bg-accent transition-colors"
           >
             Logout
-          </a>
+          </button>
         </div>
       }
     </div>

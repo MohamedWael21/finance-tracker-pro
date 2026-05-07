@@ -18,37 +18,23 @@ export class NotificationCenter implements OnInit {
   private api = inject(NotificationApiService);
   private toast = inject(ToastService);
 
-  notifications = signal<Notification[]>([]);
-  loading = signal(true);
-  error = signal('');
+  notifications = this.api.notifications;
+  loading = this.api.loading;
+  error = this.api.error;
   actionLoading = signal('');
 
-  unreadCount = computed(() => this.notifications().filter(n => !n.isRead).length);
+  unreadCount = this.api.unreadCount;
 
-  ngOnInit() { this.load(); }
+  ngOnInit() { }
 
   load() {
-    this.loading.set(true);
-    this.error.set('');
-    this.api.getAll().subscribe({
-      next: res => {
-        this.notifications.set(res.data);
-        this.loading.set(false);
-      },
-      error: err => {
-        this.error.set(err?.error?.message || 'Failed to load notifications');
-        this.loading.set(false);
-      }
-    });
+    this.api.getAll().subscribe();
   }
 
   markAsRead(notif: Notification) {
     this.actionLoading.set(notif._id + '-read');
     this.api.markAsRead(notif._id).subscribe({
       next: res => {
-        this.notifications.update(list =>
-          list.map(n => n._id === notif._id ? { ...n, isRead: true } : n)
-        );
         this.actionLoading.set('');
         this.toast.success('Notification marked as read');
       },
@@ -63,7 +49,6 @@ export class NotificationCenter implements OnInit {
     this.actionLoading.set(notif._id + '-delete');
     this.api.delete(notif._id).subscribe({
       next: () => {
-        this.notifications.update(list => list.filter(n => n._id !== notif._id));
         this.actionLoading.set('');
         this.toast.success('Notification deleted');
       },

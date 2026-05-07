@@ -1,1 +1,68 @@
-<p>transaction-form works!</p>
+<app-modal
+  [(isOpen)]="isOpen"
+  [title]="transactionToEdit() ? 'Edit Transaction' : 'Add Transaction'"
+  size="md"
+>
+  <div class="flex flex-col gap-4 py-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Type *</label>
+        <app-select
+          [(value)]="formData.type"
+          [options]="typeOptions"
+          placeholder="Choose transaction type"
+        ></app-select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Amount *</label>
+        <app-input
+          type="number"
+          [(value)]="formData.amount"
+          placeholder="Enter amount"
+        ></app-input>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      @if (formData.type !== 'income') {
+        <div>
+          <label class="block text-sm font-medium mb-1">Category *</label>
+          <app-select
+            [(value)]="formData.category"
+            [options]="categoryOptions"
+            placeholder="Choose the category"
+          ></app-select>
+        </div>
+      }
+      <div>
+        <label class="block text-sm font-medium mb-1">Date *</label>
+        <app-input type="date" [(value)]="formData.date" placeholder="Pick a date"></app-input>
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium mb-1">Description</label>
+      <app-input
+        [(value)]="formData.description"
+        placeholder="Describe the transaction"
+      ></app-input>
+    </div>
+
+    <div class="flex items-center gap-2 mt-2">
+      <input
+        type="checkbox"
+        id="isRecurring"
+        [(ngModel)]="formData.isRecurring"
+        class="rounded border-input text-primary focus:ring-primary h-4 w-4"
+      />
+      <label for="isRecurring" class="text-sm font-medium">Make this a recurring transaction</label>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-3 mt-6">
+    <app-button variant="outline" (click)="close()" [disabled]="loading()">Cancel</app-button>
+    <app-button (click)="save()" [disabled]="loading()">
+      {{ loading() ? 'Saving...' : 'Save' }}
+    </app-button>
+  </div>
+</app-modal>

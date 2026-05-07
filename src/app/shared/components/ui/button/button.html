@@ -1,3 +1,10 @@
-<button [type]="type()" [class]="baseStyles + ' ' + variantClass + ' ' + sizeClass + ' ' + widthClass" (click)="handleClick($event)">
+<button
+  title="button"
+  [type]="type()"
+  [class]="baseStyles + ' ' + variantClass + ' ' + sizeClass + ' ' + widthClass"
+  [title]="title()"
+  [disabled]="disabled()"
+  (click)="handleClick($event)"
+>
   <ng-content />
 </button>

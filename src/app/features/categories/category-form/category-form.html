@@ -1,1 +1,52 @@
-<p>category-form works!</p>
+<app-modal [(isOpen)]="isOpen" [title]="categoryToEdit() ? 'Edit Category' : 'Add Category'">
+  <div class="flex flex-col gap-4">
+    <app-select
+      label="Category Type"
+      [options]="categoryTypes"
+      [(value)]="formData.type"
+      placeholder="Select a category type"
+    ></app-select>
+
+    @if (formData.type === 'other') {
+      <app-input
+        label="Custom Category Name"
+        placeholder="Enter your custom category"
+        [(value)]="formData.customName"
+      ></app-input>
+    }
+
+    <app-select
+      label="Icon"
+      [options]="icons"
+      [(value)]="formData.icon"
+      placeholder="Select an icon"
+    ></app-select>
+
+    <div class="flex flex-col gap-2 mt-2">
+      <label class="text-sm font-medium">Color</label>
+      <div class="flex gap-3">
+        @for (color of colors; track color.value) {
+          <button
+            type="button"
+            class="w-10 h-10 rounded-xl cursor-pointer transition-transform hover:scale-110 flex items-center justify-center border-2 shadow-sm"
+            [class.border-foreground]="formData.color === color.value"
+            [class.border-transparent]="formData.color !== color.value"
+            [style.background-color]="color.value"
+            [attr.aria-label]="'Select color ' + color.label"
+            [attr.title]="'Select color ' + color.label"
+            (click)="formData.color = color.value"
+          >
+            <span class="sr-only">Select color {{ color.label }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <ng-container footer>
+    <app-button variant="outline" (click)="close()" [disabled]="loading()">Cancel</app-button>
+    <app-button (click)="save()" [disabled]="loading()">
+      {{ loading() ? 'Saving...' : categoryToEdit() ? 'Save' : 'Add' }}
+    </app-button>
+  </ng-container>
+</app-modal>
