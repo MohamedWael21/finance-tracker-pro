@@ -5,7 +5,7 @@ import { SafeHtml } from '@angular/platform-browser';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
-  content: string | SafeHtml;
+  content: string ;
 }
 
 export interface ChatApiResponse {
