@@ -2,8 +2,7 @@ import { TransactionType } from '../../transactions/models/transaction.model';
 
 export interface Category {
   _id: string;
-  name: string;
-  type: TransactionType;
+  type: string; 
   icon?: string;
   color?: string;
   isDefault?: boolean;
@@ -13,8 +12,7 @@ export interface Category {
 }
 
 export interface CreateCategoryDto {
-  name: string;
-  type: TransactionType;
+  type: string;
   icon?: string;
   color?: string;
 }
