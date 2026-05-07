@@ -31,7 +31,7 @@ export class header implements OnInit {
   });
 
   avatar = computed(() => {
-    return this.authService.currentUser()?.avatar.secure_url;
+    return this.authService.currentUser()?.avatar?.secure_url;
   });
 
   unreadCount = computed(() => {

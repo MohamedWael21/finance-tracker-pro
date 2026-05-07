@@ -42,3 +42,13 @@ export interface MessageResponse {
   success: boolean;
   message: string;
 }
+
+export interface ChatApiMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface ChatApiResponse {
+  success: boolean;
+  data: string;
+}

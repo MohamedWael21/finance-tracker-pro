@@ -3,10 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-
 interface PaymentIntentResponse {
   success: boolean;
   clientSecret: string;
+}
+
+interface UserResponse {
+  success: boolean;
+  user: any;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +22,13 @@ export class PaymentService {
     return this.http.post<PaymentIntentResponse>(
       `${this.apiUrl}/payment/create-payment-intent`,
       {},
-      { withCredentials: true }
+      { withCredentials: true },
     );
+  }
+
+  getUpdatedUser(): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`${this.apiUrl}/auth/me`, {
+      withCredentials: true,
+    });
   }
 }

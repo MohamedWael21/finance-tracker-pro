@@ -1,13 +1,9 @@
-// src/app/features/profile/user.service.ts
-// Purpose: API service layer for all user profile endpoints
-
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { handleHttpError } from '../../utils/http-error.utils';
 import {
-  UserProfile,
   UpdateProfilePayload,
   ChangePasswordPayload,
   UserProfileResponse,

@@ -1,7 +1,3 @@
-import { Dashboard } from './features/dashboard/dashboard';
-// File: app.routes.ts
-// Purpose: Application routing
-
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { premiumGuard } from './core/guards/premium.guard';
@@ -26,12 +22,26 @@ export const routes: Routes = [
       {
         path: 'reports',
         loadComponent: () => import('./features/reports/reports/reports').then((m) => m.Reports),
-        canActivate: [authGuard], //premiumGuard
+        canActivate: [authGuard, premiumGuard],
       },
       {
         path: 'profile',
         loadComponent: () =>
           import('./features/profile/profile.component').then((m) => m.ProfileComponent),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'pricing',
+        loadComponent: () =>
+          import('./features/payments/plans/plans').then((m) => m.Plans),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notifications/notification-center/notification-center').then(
+            (m) => m.NotificationCenter,
+          ),
         canActivate: [authGuard],
       },
       {
