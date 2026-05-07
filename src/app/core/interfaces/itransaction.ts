@@ -3,7 +3,7 @@ export interface ITransaction {
   user: string;
   type: string;
   amount: number;
-  category: Category;
+  category?: Category;
   description: string;
   date: string;
   isRecurring: boolean;

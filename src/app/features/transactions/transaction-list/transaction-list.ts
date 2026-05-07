@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TransactionService } from '../services/transaction.service';
 import { Transaction } from '../models/transaction.model';
 import { TransactionFilters } from '../models/transaction-filters.model';
@@ -46,6 +47,7 @@ import { LucidePlus, LucidePencil, LucideTrash2, provideLucideIcons } from '@luc
 export class TransactionList implements OnInit {
   private transactionService = inject(TransactionService);
   private toastService = inject(ToastService);
+  private route = inject(ActivatedRoute);
 
   transactions = signal<Transaction[]>([]);
   loading = signal(false);
@@ -73,7 +75,10 @@ export class TransactionList implements OnInit {
   ];
 
   ngOnInit() {
-    this.loadTransactions();
+    this.route.queryParams.subscribe((params) => {
+      this.searchFilter.set(params['search'] || '');
+      this.loadTransactions();
+    });
   }
 
   private buildFilters(): TransactionFilters {

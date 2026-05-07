@@ -2,17 +2,24 @@ import { Component, computed, input } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card/card';
+import { LucideAngularModule, PieChart as PieChartIcon } from 'lucide-angular';
 
 @Component({
   selector: 'app-pie-chart',
   templateUrl: './pie-chart.html',
   standalone: true,
-  imports: [BaseChartDirective, Card, CardHeader, CardTitle, CardContent],
+  imports: [BaseChartDirective, Card, CardHeader, CardTitle, CardContent, LucideAngularModule],
 })
 export class PieChart {
+  readonly PieChartIcon = PieChartIcon;
   title = input<string>('Spending by Category');
   labels = input<string[]>(['Food & Dining', 'Bills', 'Entertainment', 'Shopping', 'Transportation']);
   data = input<number[]>([500, 300, 150, 200, 400]);
+
+  isEmpty = computed(() => {
+    const d = this.data();
+    return !d || d.length === 0 || d.every((v) => v === 0);
+  });
   
   total = computed(() => this.data().reduce((acc, val) => acc + val, 0));
 

@@ -3,14 +3,20 @@
     <app-card-title>{{ title() }}</app-card-title>
   </app-card-header>
   <app-card-content>
-    <div class="relative h-87.5 w-full mt-4">
-      <canvas
-        baseChart
-        [data]="chartData()"
-        [options]="chartOptions"
-        [type]="'bar'"
-      >
-      </canvas>
+    <div class="relative h-87.5 w-full mt-4 flex items-center justify-center">
+      @if (isEmpty()) {
+        <div class="flex flex-col items-center justify-center text-gray-400 space-y-4">
+          <div class="bg-gray-50 p-4 rounded-full">
+            <lucide-icon [img]="LayoutList" class="w-12 h-12 text-gray-300"></lucide-icon>
+          </div>
+          <div class="text-center">
+            <p class="text-lg font-medium text-gray-500">No data found</p>
+            <p class="text-sm">We couldn't find any categorization data</p>
+          </div>
+        </div>
+      } @else {
+        <canvas baseChart [data]="chartData()" [options]="chartOptions" [type]="'bar'"> </canvas>
+      }
     </div>
   </app-card-content>
 </app-card>

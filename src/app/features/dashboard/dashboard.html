@@ -1,6 +1,6 @@
 <header class="flex items-center justify-between mb-6">
   <app-page-header [title]="title" [subtitle]="subtitle"></app-page-header>
-  <app-button>
+  <app-button (click)="isModalOpen.set(true)">
     <lucide-icon [img]="icons.Plus" class="w-5 h-5"></lucide-icon>
     Add Transaction</app-button
   >
@@ -55,10 +55,7 @@
     <app-bar-chart
       [title]="'Income vs Expenses'"
       [labels]="labels"
-      [datasets]="[
-        { label: 'Income', data: incomeData, color: '#10b981' },
-        { label: 'Expenses', data: expenseData, color: '#ef4444' },
-      ]"
+      [datasets]="datasets"
     ></app-bar-chart>
     <app-pie-chart [labels]="pieChartLabels" [data]="pieChartData"></app-pie-chart>
   </section>
@@ -72,7 +69,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <h4>{{ trans.description | titlecase }}</h4>
-                <p class="text-gray-400 text-sm">{{ trans.category.type }}</p>
+                <p class="text-gray-400 text-sm">{{ trans.category?.type }}</p>
               </div>
               <div class="flex justify-center flex-col items-end">
                 <p class="font-semibold" [class.text-green-500]="trans.type === 'income'">
@@ -84,7 +81,18 @@
             </div>
           </div>
         </div>
+      } @empty {
+        <div class="flex flex-col items-center justify-center p-12 text-gray-400">
+          <lucide-icon [img]="icons.Inbox" class="w-16 h-16 mb-4 text-gray-200"></lucide-icon>
+          <p class="text-lg">No transactions yet</p>
+          <p class="text-sm">Your recent activity will show up here</p>
+        </div>
       }
     </app-card>
   </section>
 </main>
+
+<app-transaction-form
+  [(isOpen)]="isModalOpen"
+  (saved)="onSaved()"
+></app-transaction-form>

@@ -50,12 +50,12 @@ export class Sidebar {
   });
 
   navItems: NavItem[] = [
-  { path: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard', premium: false },
-  { path: '/transactions', label: 'Transactions', icon: 'Receipt', premium: false },
-  { path: '/categories', label: 'Categories', icon: 'FolderOpen', premium: false },
-  { path: '/budgets', label: 'Budgets', icon: 'Wallet', premium: false },
-  { path: '/reports', label: 'Reports', icon: 'BarChart3', premium: true },
-  { path: '/pricing', label: 'Pricing', icon: 'CreditCard', premium: false },
-  { path: '/notifications', label: 'Notifications', icon: 'Bell', premium: false },
-];
+    { path: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard', premium: false },
+    { path: '/transactions', label: 'Transactions', icon: 'Receipt', premium: false },
+    { path: '/categories', label: 'Categories', icon: 'FolderOpen', premium: false },
+    { path: '/budgets', label: 'Budgets', icon: 'Wallet', premium: false },
+    { path: '/reports', label: 'Reports', icon: 'BarChart3', premium: true },
+    { path: '/pricing', label: 'Pricing', icon: 'CreditCard', premium: false },
+    { path: '/notifications', label: 'Notifications', icon: 'Bell', premium: false },
+  ];
 }

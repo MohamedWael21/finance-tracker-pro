@@ -6,6 +6,16 @@ import { AuthLayout } from './shared/components/layout/auth-layout/auth-layout';
 
 export const routes: Routes = [
   {
+    path: 'reset-password',
+    component: AuthLayout,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/auth/reset-password/reset-password').then((m) => m.ResetPassword),
+      }
+    ]
+  },
+  {
     path: '',
     component: RootLayout,
     children: [
@@ -60,6 +70,20 @@ export const routes: Routes = [
         loadChildren: () => import('./features/budgets/routes').then((m) => m.BUDGET_ROUTES),
         canActivate: [authGuard],
       },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notifications/notification-center/notification-center').then(
+            (m) => m.NotificationCenter,
+          ),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'pricing',
+        loadComponent: () =>
+          import('./features/payments/plans/plans').then((m) => m.Plans),
+        canActivate: [authGuard],
+      },
     ],
   },
   {
@@ -73,6 +97,18 @@ export const routes: Routes = [
       {
         path: 'register',
         loadComponent: () => import('./features/auth/register/register').then((m) => m.Register),
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () => import('./features/auth/forgot-password/forgot-password').then((m) => m.ForgotPassword),
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () => import('./features/auth/reset-password/reset-password').then((m) => m.ResetPassword),
+      },
+      {
+        path: 'reset-password-confirm/:token',
+        loadComponent: () => import('./features/auth/reset-password/reset-password').then((m) => m.ResetPassword),
       },
     ],
   },

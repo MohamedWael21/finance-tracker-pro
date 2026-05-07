@@ -2,6 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card/card';
+import { LucideAngularModule, LineChart as LineChartIcon } from 'lucide-angular';
 
 export interface ChartSeries {
   label: string;
@@ -13,12 +14,19 @@ export interface ChartSeries {
   selector: 'app-line-chart',
   templateUrl: './line-chart.html',
   standalone: true,
-  imports: [BaseChartDirective, Card, CardHeader, CardTitle, CardContent],
+  imports: [BaseChartDirective, Card, CardHeader, CardTitle, CardContent, LucideAngularModule],
 })
 export class LineChart {
+  readonly LineChartIcon = LineChartIcon;
   title = input<string>('Trends Overview');
   labels = input<string[]>([]);
   datasets = input<ChartSeries[]>([]);
+
+  isEmpty = computed(() => {
+    const ds = this.datasets();
+    if (!ds || ds.length === 0) return true;
+    return ds.every((d) => d.data.every((v) => v === 0));
+  });
 
   chartData = computed<ChartData<'line'>>(() => ({
     labels: this.labels(),
