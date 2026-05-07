@@ -21,3 +21,27 @@ export interface RegisterRequest {
   email: string;
   password: string;
 }
+
+export interface ChatApiMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface ChatApiResponse {
+  success: boolean;
+  data: string;
+}
+
+export interface ResetPasswordInput {
+  email: string;
+}
+
+export interface ResetPasswordConfirmInput {
+  password: string;
+}
+
+export interface GenericAuthResponse {
+  success: boolean;
+  message: string;
+  token?: string;
+}
