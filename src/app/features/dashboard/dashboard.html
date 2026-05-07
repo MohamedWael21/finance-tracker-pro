@@ -1,0 +1,90 @@
+<header class="flex items-center justify-between mb-6">
+  <app-page-header [title]="title" [subtitle]="subtitle"></app-page-header>
+  <app-button>
+    <lucide-icon [img]="icons.Plus" class="w-5 h-5"></lucide-icon>
+    Add Transaction</app-button
+  >
+</header>
+
+<main class="grid grid-cols-1 gap-6">
+  <!-- ^ ==================== cards ==================== -->
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <app-card>
+      <app-card-content>
+        <div class="flex my-4 items-center justify-between">
+          <app-card-title>Total Balance</app-card-title>
+          <div
+            class="w-10 h-10 flex items-center justify-center rounded-lg bg-purple-100 text-purple-600"
+          >
+            <lucide-icon [img]="icons.DollarSign" class="w-5 h-5"></lucide-icon>
+          </div>
+        </div>
+        <p class="text-3xl font-semibold">${{ lastMonthBalance }}</p>
+      </app-card-content>
+    </app-card>
+    <app-card>
+      <app-card-content>
+        <div class="flex my-4 items-center justify-between">
+          <app-card-title>Total Income</app-card-title>
+          <div
+            class="w-10 h-10 flex items-center justify-center rounded-lg bg-green-100 text-green-600"
+          >
+            <lucide-icon [img]="icons.TrendingUp" class="w-5 h-5"></lucide-icon>
+          </div>
+        </div>
+        <p class="text-3xl font-semibold">${{ lastMonthInc }}</p>
+      </app-card-content>
+    </app-card>
+    <app-card>
+      <app-card-content>
+        <div class="flex my-4 items-center justify-between">
+          <app-card-title>Total Expenses</app-card-title>
+          <div
+            class="w-10 h-10 flex items-center justify-center rounded-lg bg-red-100 text-red-600"
+          >
+            <lucide-icon [img]="icons.TrendingDown" class="w-5 h-5"></lucide-icon>
+          </div>
+        </div>
+        <p class="text-3xl font-semibold">${{ lastMonthExp }}</p>
+      </app-card-content>
+    </app-card>
+  </section>
+
+  <!-- ^ ==================== charts ==================== -->
+  <section class="grid grid-cols-1 gap-5">
+    <app-bar-chart
+      [title]="'Income vs Expenses'"
+      [labels]="labels"
+      [datasets]="[
+        { label: 'Income', data: incomeData, color: '#10b981' },
+        { label: 'Expenses', data: expenseData, color: '#ef4444' },
+      ]"
+    ></app-bar-chart>
+    <app-pie-chart [labels]="pieChartLabels" [data]="pieChartData"></app-pie-chart>
+  </section>
+
+  <!-- ^ ==================== transactions ==================== -->
+  <section>
+    <app-card>
+      @for (trans of transationsList; track trans._id) {
+        <div class="border rounded-2xl m-4 hover:bg-sky-100">
+          <div class="card p-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4>{{ trans.description | titlecase }}</h4>
+                <p class="text-gray-400 text-sm">{{ trans.category.type }}</p>
+              </div>
+              <div class="flex justify-center flex-col items-end">
+                <p class="font-semibold" [class.text-green-500]="trans.type === 'income'">
+                  {{ trans.type === 'income' ? '+' : '-' }}
+                  ${{ trans.amount }}
+                </p>
+                <p>{{ trans.date | date: 'yyyy-MM-dd' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </app-card>
+  </section>
+</main>

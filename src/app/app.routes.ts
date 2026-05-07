@@ -1,3 +1,4 @@
+import { Dashboard } from './features/dashboard/dashboard';
 // File: app.routes.ts
 // Purpose: Application routing
 
@@ -14,15 +15,18 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () =>
-          import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
         canActivate: [authGuard],
       },
       {
         path: 'reports',
-        loadComponent: () =>
-          import('./features/reports/reports.component').then((m) => m.ReportsComponent),
-        canActivate: [authGuard, premiumGuard],
+        loadComponent: () => import('./features/reports/reports/reports').then((m) => m.Reports),
+        canActivate: [authGuard], //premiumGuard
       },
       {
         path: 'profile',
