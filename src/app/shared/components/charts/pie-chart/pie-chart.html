@@ -3,17 +3,29 @@
     <app-card-title>{{ title() }}</app-card-title>
   </app-card-header>
   <app-card-content>
-    <div class="relative flex flex-col items-center">
-      <div class="relative h-[350px] w-full">
-        <canvas
-          baseChart
-          [data]="chartData()"
-          [options]="chartOptions"
-          [plugins]="chartPlugins"
-          [type]="'pie'"
-        >
-        </canvas>
-      </div>
+    <div class="relative flex flex-col items-center justify-center h-[350px]">
+      @if (isEmpty()) {
+        <div class="flex flex-col items-center justify-center text-gray-400 space-y-4">
+          <div class="bg-gray-50 p-4 rounded-full">
+            <lucide-icon [img]="PieChartIcon" class="w-12 h-12 text-gray-300"></lucide-icon>
+          </div>
+          <div class="text-center">
+            <p class="text-lg font-medium text-gray-500">No category data</p>
+            <p class="text-sm">Add expenses to see your spending distribution</p>
+          </div>
+        </div>
+      } @else {
+        <div class="relative h-full w-full">
+          <canvas
+            baseChart
+            [data]="chartData()"
+            [options]="chartOptions"
+            [plugins]="chartPlugins"
+            [type]="'pie'"
+          >
+          </canvas>
+        </div>
+      }
     </div>
   </app-card-content>
 </app-card>

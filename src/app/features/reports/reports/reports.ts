@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { Crown, LucideAngularModule } from 'lucide-angular';
 import { Badge } from '../../../shared/components/ui/badge/badge';
 import { Card } from '../../../shared/components/ui/card/card';
@@ -14,6 +14,7 @@ import { LineChart } from '../../../shared/components/charts/line-chart/line-cha
 })
 export class Reports implements OnInit {
   private readonly _DashboardService = inject(DashboardService);
+  private readonly _cdr = inject(ChangeDetectorRef);
 
   // ^ ================= variables ====================
   title: string = 'Reports';
@@ -35,9 +36,15 @@ export class Reports implements OnInit {
   // ^ ================= line chart variables ====================
   lineChartLabels: string[] = [];
 
-  incomeTrendData: number[] = [];
-  expenseTrendData: number[] = [];
-  savingsTrendData: number[] = [];
+  incomeTrendData: number[] = Array(12).fill(0);
+  expenseTrendData: number[] = Array(12).fill(0);
+  savingsTrendData: number[] = Array(12).fill(0);
+
+  trendDatasets: any[] = [
+    { label: 'Income', data: this.incomeTrendData, color: '#22c55e' },
+    { label: 'Expenses', data: this.expenseTrendData, color: '#ef4444' },
+    { label: 'Savings', data: this.savingsTrendData, color: '#4f46e5' },
+  ];
 
   ngOnInit(): void {
     this._DashboardService.getAllTransactions().subscribe({
@@ -45,10 +52,9 @@ export class Reports implements OnInit {
         const transactions = res.data;
 
         this.calculateReportData(transactions);
-
         this.generateCategoryChart(transactions);
-
         this.generateLineChartData(transactions);
+        this._cdr.detectChanges();
       },
     });
   }
@@ -91,7 +97,7 @@ export class Reports implements OnInit {
     const categoryMap: { [key: string]: number } = {};
 
     transactions.forEach((transaction) => {
-      if (transaction.type === 'expense') {
+      if (transaction.type === 'expense' && transaction.category) {
         const category = transaction.category.type;
 
         if (categoryMap[category]) {
@@ -153,5 +159,11 @@ export class Reports implements OnInit {
     this.expenseTrendData = monthlyExpenses;
 
     this.savingsTrendData = monthlyIncome.map((income, index) => income - monthlyExpenses[index]);
+
+    this.trendDatasets = [
+      { label: 'Income', data: this.incomeTrendData, color: '#22c55e' },
+      { label: 'Expenses', data: this.expenseTrendData, color: '#ef4444' },
+      { label: 'Savings', data: this.savingsTrendData, color: '#4f46e5' },
+    ];
   }
 }

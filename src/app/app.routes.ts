@@ -60,6 +60,20 @@ export const routes: Routes = [
         loadChildren: () => import('./features/budgets/routes').then((m) => m.BUDGET_ROUTES),
         canActivate: [authGuard],
       },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notifications/notification-center/notification-center').then(
+            (m) => m.NotificationCenter,
+          ),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'pricing',
+        loadComponent: () =>
+          import('./features/payments/plans/plans').then((m) => m.Plans),
+        canActivate: [authGuard],
+      },
     ],
   },
   {

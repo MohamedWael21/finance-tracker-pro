@@ -51,23 +51,7 @@
     <app-line-chart
       [title]="'Monthly Trends'"
       [labels]="lineChartLabels"
-      [datasets]="[
-        {
-          label: 'Income',
-          data: incomeTrendData,
-          color: '#22c55e',
-        },
-        {
-          label: 'Expenses',
-          data: expenseTrendData,
-          color: '#ef4444',
-        },
-        {
-          label: 'Savings',
-          data: savingsTrendData,
-          color: '#4f46e5',
-        },
-      ]"
+      [datasets]="trendDatasets"
     >
     </app-line-chart>
   </section>

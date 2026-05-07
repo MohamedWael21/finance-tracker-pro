@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { PageHeader } from '../../shared/components/ui/page-header/page-header';
-import { LucideAngularModule, DollarSign, TrendingUp, TrendingDown, Plus } from 'lucide-angular';
+import { LucideAngularModule, DollarSign, TrendingUp, TrendingDown, Plus, Inbox } from 'lucide-angular';
 import { Card, CardContent, CardTitle } from '../../shared/components/ui/card/card';
 import { Button } from '../../shared/components/ui/button/button';
 import { BarChart } from '../../shared/components/charts/bar-chart/bar-chart';
@@ -12,6 +12,8 @@ import { TabPanel } from '../../shared/components/ui/tabs/tab-panel';
 import { Input } from '../../shared/components/ui/input/input';
 import { ITransaction } from '../../core/interfaces/itransaction';
 import { DatePipe, TitleCasePipe } from '@angular/common';
+import { TransactionForm } from '../transactions/transaction-form/transaction-form';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,12 +28,15 @@ import { DatePipe, TitleCasePipe } from '@angular/common';
     PieChart,
     DatePipe,
     TitleCasePipe,
+    TransactionForm,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
   private readonly _DashboardService = inject(DashboardService);
+  private readonly _cdr = inject(ChangeDetectorRef);
+  isModalOpen = signal(false);
 
   // ^ ============== variables =================
   reportData!: IReport;
@@ -42,6 +47,7 @@ export class Dashboard implements OnInit {
     TrendingUp,
     TrendingDown,
     Plus,
+    Inbox,
   };
 
   title: string = 'Dashboard';
@@ -61,10 +67,15 @@ export class Dashboard implements OnInit {
     'Nov',
     'Dec',
   ];
-  incomeData: number[] = [];
-  expenseData: number[] = [];
+  incomeData: number[] = Array(12).fill(0);
+  expenseData: number[] = Array(12).fill(0);
   pieChartLabels: string[] = [];
   pieChartData: number[] = [];
+
+  datasets: any[] = [
+    { label: 'Income', data: this.incomeData, color: '#10b981' },
+    { label: 'Expenses', data: this.expenseData, color: '#ef4444' },
+  ];
 
   lastMonthExp: number = 0;
   lastMonthInc: number = 0;
@@ -86,6 +97,11 @@ export class Dashboard implements OnInit {
         this.expenseData[month] += transaction.amount;
       }
     });
+
+    this.datasets = [
+      { label: 'Income', data: this.incomeData, color: '#10b981' },
+      { label: 'Expenses', data: this.expenseData, color: '#ef4444' },
+    ];
   }
 
   // ^ ============== pie-chart data =================
@@ -93,7 +109,7 @@ export class Dashboard implements OnInit {
     const categoryMap: { [key: string]: number } = {};
 
     transactions.forEach((transaction) => {
-      if (transaction.type === 'expense') {
+      if (transaction.type === 'expense' && transaction.category) {
         const category = transaction.category.type;
 
         if (categoryMap[category]) {
@@ -121,7 +137,13 @@ export class Dashboard implements OnInit {
         this.lastMonthExp = this.expenseData[today.getMonth()];
         this.lastMonthInc = this.incomeData[today.getMonth()];
         this.lastMonthBalance = this.lastMonthInc - this.lastMonthExp;
+
+        this._cdr.detectChanges();
       },
     });
+  }
+
+  onSaved() {
+    this.ngOnInit();
   }
 }
