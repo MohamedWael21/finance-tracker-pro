@@ -34,6 +34,24 @@ export const routes: Routes = [
           import('./features/profile/profile.component').then((m) => m.ProfileComponent),
         canActivate: [authGuard],
       },
+      {
+        path: 'categories',
+        loadChildren: () =>
+          import('./features/categories/routes').then((m) => m.CATEGORY_ROUTES),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'transactions',
+        loadChildren: () =>
+          import('./features/transactions/routes').then((m) => m.TRANSACTION_ROUTES),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'budgets',
+        loadChildren: () =>
+          import('./features/budgets/routes').then((m) => m.BUDGET_ROUTES),
+        canActivate: [authGuard],
+      },
     ],
   },
   {
