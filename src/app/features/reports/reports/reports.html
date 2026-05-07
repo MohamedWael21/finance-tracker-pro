@@ -1,1 +1,85 @@
-<p>reports works!</p>
+<!-- ^ ==================== heading ==================== -->
+<header class="">
+  <div class="flex items-center gap-4">
+    <h1>{{ title }}</h1>
+    <app-badge>
+      <div class="flex gap-2 items-center">
+        <lucide-icon [img]="icons.Crown" class="w-4 h-4"></lucide-icon>
+        <span>Premium</span>
+      </div></app-badge
+    >
+  </div>
+
+  <p class="text-gray-500">{{ subtitle }}</p>
+</header>
+
+<main class="my-4">
+  <!-- ^ ==================== cards ==================== -->
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <app-card>
+      <div class="flex my-4 gap-4 flex-col px-5">
+        <h2 class="text-lg">Avg. Income</h2>
+        <p class="text-3xl font-semibold">${{ avgIncome.toFixed(0) }}</p>
+        <span class="text-gray-400 text-sm">per month</span>
+      </div>
+    </app-card>
+    <app-card>
+      <div class="flex my-4 gap-4 flex-col px-5">
+        <h2 class="text-lg">Avg. Expense</h2>
+        <p class="text-3xl font-semibold">${{ avgExpenses.toFixed(0) }}</p>
+        <span class="text-gray-400 text-sm">per month</span>
+      </div>
+    </app-card>
+    <app-card>
+      <div class="flex my-4 gap-4 flex-col px-5">
+        <h2 class="text-lg">Avg. Savings</h2>
+        <p class="text-3xl font-semibold text-green-400">${{ avgSavings.toFixed(0) }}</p>
+        <span class="text-gray-400 text-sm">per month</span>
+      </div>
+    </app-card>
+    <app-card>
+      <div class="flex my-4 gap-4 flex-col px-5">
+        <h2 class="text-lg">Savings Rate</h2>
+        <p class="text-3xl text-green-400 font-semibold">{{ savingsRate.toFixed(1) }}%</p>
+        <span class="text-gray-400 text-sm">per month</span>
+      </div>
+    </app-card>
+  </section>
+
+  <!-- ^ ==================== line chart ==================== -->
+  <section class="my-6">
+    <app-line-chart
+      [title]="'Monthly Trends'"
+      [labels]="lineChartLabels"
+      [datasets]="[
+        {
+          label: 'Income',
+          data: incomeTrendData,
+          color: '#22c55e',
+        },
+        {
+          label: 'Expenses',
+          data: expenseTrendData,
+          color: '#ef4444',
+        },
+        {
+          label: 'Savings',
+          data: savingsTrendData,
+          color: '#4f46e5',
+        },
+      ]"
+    >
+    </app-line-chart>
+  </section>
+
+  <!-- ^ ==================== horizontal bar chart ==================== -->
+  <section class="my-6">
+    <app-horizontal-bar-chart
+      [title]="'Category Breakdown (This Month)'"
+      [labels]="chartLabels"
+      [data]="chartData"
+      [color]="'#4f46e5'"
+    >
+    </app-horizontal-bar-chart>
+  </section>
+</main>
