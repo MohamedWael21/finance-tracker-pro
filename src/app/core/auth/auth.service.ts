@@ -48,6 +48,15 @@ export class AuthService {
     );
   }
 
+  updateUserPlan() {
+    this._currentUser.update((user) => {
+      if (user) {
+        return { ...user, plan: 'premium' };
+      }
+      return user;
+    });
+  }
+
   resetPassword(email: string): Observable<GenericAuthResponse> {
     return this.apiService.post<GenericAuthResponse>('/auth/reset-password', { email });
   }
