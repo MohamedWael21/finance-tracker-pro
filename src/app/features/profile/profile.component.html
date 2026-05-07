@@ -59,7 +59,7 @@
       </div>
 
       <input
-        id="avatar-file-input"
+        #fileInput
         type="file"
         accept="image/png,image/jpeg"
         class="hidden"
@@ -69,7 +69,7 @@
       <div class="flex flex-col gap-3">
         @if (avatarPreviewUrl()) {
           <div class="flex items-center gap-3">
-            <app-button variant="primary" size="sm" [disabled]="isUploadingAvatar()" (click)="uploadAvatar()">
+            <app-button variant="primary" size="sm" [disabled]="isUploadingAvatar()"  (click)="$event.stopPropagation(); uploadAvatar()">
               @if (isUploadingAvatar()) {
                 <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -81,7 +81,7 @@
                 Save Photo
               }
             </app-button>
-            <app-button variant="outline" size="sm" [disabled]="isUploadingAvatar()" (click)="cancelAvatarPreview()">
+            <app-button variant="outline" size="sm" [disabled]="isUploadingAvatar()" (click)="$event.stopPropagation(); cancelAvatarPreview()">
               Cancel
             </app-button>
           </div>
@@ -91,7 +91,7 @@
               Click the photo above to select a new image.
             </p>
             @if (avatarUrl()) {
-              <app-button variant="danger" size="sm" [disabled]="isDeletingAvatar()" (click)="deleteAvatar()">
+              <app-button variant="danger" size="sm" [disabled]="isDeletingAvatar()" (click)="$event.stopPropagation(); deleteAvatar()">
                 @if (isDeletingAvatar()) {
                   <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -122,7 +122,7 @@
         <p class="text-sm text-muted-foreground mt-0.5">Update your name and email address</p>
       </div>
       @if (!isEditingProfile()) {
-        <app-button variant="outline" size="sm" (click)="startEditingProfile()">
+        <app-button variant="outline" size="sm" (click)="$event.stopPropagation(); startEditingProfile()">
           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
             <path d="m15 5 4 4"/>

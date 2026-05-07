@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -30,6 +30,9 @@ export class ProfileComponent implements OnInit {
   isEditingProfile = signal(false);
   isUpdatingProfile = signal(false);
 
+  @ViewChild('fileInput')
+  fileInput!: ElementRef<HTMLInputElement>;
+
   editName = '';
   editEmail = '';
 
@@ -56,12 +59,14 @@ export class ProfileComponent implements OnInit {
 
   initials = computed(() => {
     const name = this.profile()?.name ?? '';
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2) || '?';
+    return (
+      name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2) || '?'
+    );
   });
 
   isDeleteConfirmed = computed(() => this.deleteConfirmText() === this.DELETE_PHRASE);
@@ -128,23 +133,25 @@ export class ProfileComponent implements OnInit {
     if (!this.validateProfileForm()) return;
 
     this.isUpdatingProfile.set(true);
-    this.userService.updateProfile({ name: this.editName.trim(), email: this.editEmail.trim() }).subscribe({
-      next: (res) => {
-        this.profile.set(res.updatedProfile);
-        this.syncToLocalStorage(res.updatedProfile);
-        this.toast.success('Profile updated successfully');
-        this.isEditingProfile.set(false);
-        this.isUpdatingProfile.set(false);
-      },
-      error: (err) => {
-        this.toast.error(this.extractMessage(err, 'Failed to update profile'));
-        this.isUpdatingProfile.set(false);
-      },
-    });
+    this.userService
+      .updateProfile({ name: this.editName.trim(), email: this.editEmail.trim() })
+      .subscribe({
+        next: (res) => {
+          this.profile.set(res.updatedProfile);
+          this.syncToLocalStorage(res.updatedProfile);
+          this.toast.success('Profile updated successfully');
+          this.isEditingProfile.set(false);
+          this.isUpdatingProfile.set(false);
+        },
+        error: (err) => {
+          this.toast.error(this.extractMessage(err, 'Failed to update profile'));
+          this.isUpdatingProfile.set(false);
+        },
+      });
   }
 
   triggerFileInput() {
-    document.getElementById('avatar-file-input')?.click();
+    this.fileInput.nativeElement.click();
   }
 
   onFileSelected(event: Event) {
@@ -162,7 +169,7 @@ export class ProfileComponent implements OnInit {
   cancelAvatarPreview() {
     this.avatarPreviewUrl.set(null);
     this.avatarSelectedFile = null;
-    const input = document.getElementById('avatar-file-input') as HTMLInputElement;
+    const input = this.fileInput.nativeElement;
     if (input) input.value = '';
   }
 
@@ -253,17 +260,19 @@ export class ProfileComponent implements OnInit {
     if (!this.validatePasswordForm()) return;
 
     this.isChangingPassword.set(true);
-    this.userService.changePassword({ oldPassword: this.oldPassword, newPassword: this.newPassword }).subscribe({
-      next: () => {
-        this.toast.success('Password changed successfully');
-        this.cancelPasswordChange();
-        this.isChangingPassword.set(false);
-      },
-      error: (err) => {
-        this.toast.error(this.extractMessage(err, 'Failed to change password'));
-        this.isChangingPassword.set(false);
-      },
-    });
+    this.userService
+      .changePassword({ oldPassword: this.oldPassword, newPassword: this.newPassword })
+      .subscribe({
+        next: () => {
+          this.toast.success('Password changed successfully');
+          this.cancelPasswordChange();
+          this.isChangingPassword.set(false);
+        },
+        error: (err) => {
+          this.toast.error(this.extractMessage(err, 'Failed to change password'));
+          this.isChangingPassword.set(false);
+        },
+      });
   }
 
   openDeleteModal() {
