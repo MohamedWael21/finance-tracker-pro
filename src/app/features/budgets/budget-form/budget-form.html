@@ -1,1 +1,35 @@
-<p>budget-form works!</p>
+<app-modal [(isOpen)]="isOpen" [title]="budgetToEdit() ? 'Edit Budget' : 'Add Budget'">
+  <div class="flex flex-col gap-4 py-4">
+    <app-input
+      label="Monthly Limit ($)"
+      type="number"
+      [(value)]="formData.amount"
+      placeholder="Enter monthly limit"
+    ></app-input>
+
+    <app-select
+      label="Category *"
+      [(value)]="formData.category"
+      [options]="categories"
+      placeholder="Select a budget category"
+    ></app-select>
+
+    <div class="grid grid-cols-2 gap-4">
+      <app-select label="Month" [(value)]="formData.month" [options]="months"></app-select>
+
+      <app-input
+        label="Year"
+        type="number"
+        [(value)]="formData.year"
+        placeholder="2025"
+      ></app-input>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-3 mt-6">
+    <app-button variant="outline" (click)="close()" [disabled]="loading()">Cancel</app-button>
+    <app-button (click)="save()" [disabled]="loading()">
+      {{ loading() ? 'Saving...' : budgetToEdit() ? 'Update Budget' : 'Add Budget' }}
+    </app-button>
+  </div>
+</app-modal>
