@@ -8,6 +8,7 @@ export interface Transaction {
   type: TransactionType;
   category: string | Category;
   description?: string;
+  isRecurring?: boolean;
   date: string;
   user: string;
   createdAt: string;
@@ -17,8 +18,9 @@ export interface Transaction {
 export interface CreateTransactionDto {
   amount: number;
   type: TransactionType;
-  category: string;
+  category?: string;
   description?: string;
+  isRecurring?: boolean;
   date: string;
 }
 

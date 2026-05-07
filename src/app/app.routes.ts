@@ -1,3 +1,4 @@
+import { Dashboard } from './features/dashboard/dashboard';
 // File: app.routes.ts
 // Purpose: Application routing
 
@@ -14,20 +15,41 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () =>
-          import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
         canActivate: [authGuard],
       },
       {
         path: 'reports',
-        loadComponent: () =>
-          import('./features/reports/reports.component').then((m) => m.ReportsComponent),
-        canActivate: [authGuard, premiumGuard],
+        loadComponent: () => import('./features/reports/reports/reports').then((m) => m.Reports),
+        canActivate: [authGuard], //premiumGuard
       },
       {
         path: 'profile',
         loadComponent: () =>
           import('./features/profile/profile.component').then((m) => m.ProfileComponent),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'categories',
+        loadChildren: () =>
+          import('./features/categories/routes').then((m) => m.CATEGORY_ROUTES),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'transactions',
+        loadChildren: () =>
+          import('./features/transactions/routes').then((m) => m.TRANSACTION_ROUTES),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'budgets',
+        loadChildren: () =>
+          import('./features/budgets/routes').then((m) => m.BUDGET_ROUTES),
         canActivate: [authGuard],
       },
     ],

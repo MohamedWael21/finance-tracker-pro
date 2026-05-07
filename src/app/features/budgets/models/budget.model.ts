@@ -2,11 +2,10 @@ import { Category } from '../../categories/models/category.model';
 
 export interface Budget {
   _id: string;
-  name: string;
   amount: number;
-  category?: string | Category; 
-  startDate: string;
-  endDate: string;
+  category?: string | Category;
+  month: number;
+  year: number;
   user: string;
   createdAt: string;
   updatedAt: string;
@@ -14,9 +13,8 @@ export interface Budget {
 }
 
 export interface CreateBudgetDto {
-  name: string;
   amount: number;
   category?: string;
-  startDate: string;
-  endDate: string;
+  month: number;
+  year: number;
 }

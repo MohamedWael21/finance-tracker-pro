@@ -2,15 +2,18 @@
   <label [for]="id()" class="block mb-2">{{ label() }}</label>
 }
 <input
+  title="input"
+  placeholder=""
   [id]="id()"
   [type]="type()"
   [class]="inputStyles"
   [placeholder]="placeholder()"
   [value]="value()"
+  [title]="title() || label() || placeholder() || name() || 'input'"
   [disabled]="disabled()"
   [required]="required()"
   [name]="name()"
-  (input)="value.set($any($event.target).value)"
+  (input)="handleInput($event)"
 />
 @if (error()) {
   <p class="mt-1 text-sm text-destructive">{{ error() }}</p>

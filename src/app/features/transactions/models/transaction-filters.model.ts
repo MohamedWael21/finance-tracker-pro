@@ -10,4 +10,6 @@ export interface TransactionFilters {
   search?: string;
   sortBy?: string;
   order?: 'asc' | 'desc';
+  minAmount?: number;
+  maxAmount?: number;
 }
