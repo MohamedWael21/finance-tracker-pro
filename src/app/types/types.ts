@@ -33,3 +33,9 @@ export interface ChatApiResponse {
   success: boolean;
   data: string;
 }
+
+export interface GenericAuthResponse {
+  success: boolean;
+  message: string;
+  token?: string;
+}
