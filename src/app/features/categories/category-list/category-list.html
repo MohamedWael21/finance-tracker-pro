@@ -58,8 +58,10 @@
       </app-card>
     } @empty {
       @if (!loading()) {
-        <div class="col-span-full text-center py-12 text-muted-foreground">
-          No categories found.
+        <div
+          class="col-span-full text-center py-12 text-muted-foreground bg-muted/20 rounded-xl border border-dashed"
+        >
+          No Categories found. Create one to start tracking your spending.
         </div>
       }
     }

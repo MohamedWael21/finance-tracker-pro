@@ -39,7 +39,7 @@ const CATEGORY_TYPES: SelectOption[] = [
 ];
 
 const ICONS: SelectOption[] = [
-  { value: 'wallet', label: 'Wallet' },
+  { value: 'wallet', label: 'No icon' },
   { value: 'utensils', label: 'Utensils' },
   { value: 'car', label: 'Car' },
   { value: 'shopping-bag', label: 'Shopping Bag' },
