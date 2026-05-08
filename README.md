@@ -247,9 +247,9 @@ Place product screenshots here if you add them later:
 
 ## License & Credits
 
-This project is maintained by the Finance Tracker team named in the backend repository README.
+This project is maintained by the Finance Tracker team named above in the README.
 
-Special credit goes to everyone who contributed to the frontend, backend, analytics, notification, recurring transaction, and premium-payment workflows.
+Special credit goes to everyone who contributed to this project.
 
 ---
 
