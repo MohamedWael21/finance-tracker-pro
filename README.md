@@ -41,6 +41,22 @@ The frontend consumes the backend REST API under `http://localhost:5000/api/v1` 
 - Responsive sidebar, header, layouts, reusable UI primitives, and modal-driven workflows
 - AI chatbot entry point for guided finance assistance
 
+## Team Responsibilities & Collaboration
+
+| 👤 Member                  | 🎯 Responsibility                                  | 📌 Details                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| -------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Mahmoud&nbsp;Mostafa**   | Project Setup & Core Finance Features              | • Set up the Angular project folder structure <br>• Managed task assignment and development workflow coordination<br>• Implemented Categories feature UI and business flow<br>• Built Transactions feature with CRUD operations and filtering support<br>• Developed Budgets feature and finance workflow integration management across finance modules |
+| **Marwa&nbsp;Ashraf**      | Core Frontend Infrastructure & Authentication Flow | • Configured environment setup and API integration structure<br>• Built thin API service abstraction layer<br>• Implemented authentication service using Angular Signals<br>• Developed auth guards and HTTP interceptor flow<br>• Configured feature-based routing structure<br>• Implemented login and registration frontend flows                                                                    |
+| **Mohamed&nbsp;Wael**      | Shared UI System & Layout Architecture             | • Built reusable UI component system (Button, Input, Modal, Table, Toast, etc.)<br>• Developed responsive Navbar and Sidebar layouts<br>• Implemented main application layout structure<br>• Created reusable chart components and utility pipes<br>• Standardized loading, empty, and error UI states across the application                                                                                |
+| **Abdulrahman&nbsp;Nagah** | Dashboard & Reporting Experience                   | • Developed dashboard UI and summary visualization flows<br>• Integrated analytics and reusable chart components<br>• Built reports feature interface and advanced filtering UI<br>• Connected dashboard data presentation with finance modules                                                                                                                                                                   |
+| **Mohanad&nbsp;Tarek**     | Advanced Features & Premium Experience             | • Implemented notifications interface and unread notification flows<br>• Developed chatbot frontend experience and interaction flow<br>• Built payments and pricing UI flows<br>• Implemented subscription and premium feature gating interfaces<br>• Developed profile management frontend screens and interactions                                                                                         |### Collaboration model
+
+- Frontend and backend are developed as separate apps with a shared API contract.
+- Feature ownership is split by domain, but data models and endpoint contracts stay aligned.
+- Reusable shared components and services reduce duplication in the Angular client.
+- Validation lives close to the backend boundary so the UI and API can both enforce sane input rules.
+- Admin, premium, reporting, and recurring flows cross multiple modules and were handled as joint system features rather than isolated screens.
+
 ## Technologies
 
 | Technology                                         | Purpose in Project                                                                       | Team Usage / Responsibility                                                                        |
@@ -94,22 +110,6 @@ The project follows a clean split between a feature-rich Angular client and a RE
 - Reporting and dashboard pages derive their visual data from backend transaction and budget endpoints.
 - Notifications are polled from the backend and surfaced in both the header dropdown and notification center.
 - Premium access is guarded on the frontend and confirmed on the backend through Stripe and the user plan field.
-
-## Team Responsibilities & Collaboration
-
-| 👤 Member                  | 🎯 Responsibility                                  | 📌 Details                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| -------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Mahmoud&nbsp;Mostafa**   | Project Setup & Core Finance Features              | • Set up the Angular project folder structure <br>• Managed task assignment and development workflow coordination<br>• Implemented Categories feature UI and business flow<br>• Built Transactions feature with CRUD operations and filtering support<br>• Developed Budgets feature and finance workflow integration management across finance modules |
-| **Marwa&nbsp;Ashraf**      | Core Frontend Infrastructure & Authentication Flow | • Configured environment setup and API integration structure<br>• Built thin API service abstraction layer<br>• Implemented authentication service using Angular Signals<br>• Developed auth guards and HTTP interceptor flow<br>• Configured feature-based routing structure<br>• Implemented login and registration frontend flows                                                                    |
-| **Mohamed&nbsp;Wael**      | Shared UI System & Layout Architecture             | • Built reusable UI component system (Button, Input, Modal, Table, Toast, etc.)<br>• Developed responsive Navbar and Sidebar layouts<br>• Implemented main application layout structure<br>• Created reusable chart components and utility pipes<br>• Standardized loading, empty, and error UI states across the application                                                                                |
-| **Abdulrahman&nbsp;Nagah** | Dashboard & Reporting Experience                   | • Developed dashboard UI and summary visualization flows<br>• Integrated analytics and reusable chart components<br>• Built reports feature interface and advanced filtering UI<br>• Connected dashboard data presentation with finance modules                                                                                                                                                                   |
-| **Mohanad&nbsp;Tarek**     | Advanced Features & Premium Experience             | • Implemented notifications interface and unread notification flows<br>• Developed chatbot frontend experience and interaction flow<br>• Built payments and pricing UI flows<br>• Implemented subscription and premium feature gating interfaces<br>• Developed profile management frontend screens and interactions                                                                                         |### Collaboration model
-
-- Frontend and backend are developed as separate apps with a shared API contract.
-- Feature ownership is split by domain, but data models and endpoint contracts stay aligned.
-- Reusable shared components and services reduce duplication in the Angular client.
-- Validation lives close to the backend boundary so the UI and API can both enforce sane input rules.
-- Admin, premium, reporting, and recurring flows cross multiple modules and were handled as joint system features rather than isolated screens.
 
 ## Project Structure
 
