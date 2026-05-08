@@ -1,6 +1,6 @@
 import { inject, Injectable, signal, computed } from '@angular/core';
 import { ApiService } from '../services/api.service';
-import { AuthResponse, User, LoginRequest, RegisterRequest } from '../../types/types';
+import { AuthResponse, User, LoginRequest, RegisterRequest, GenericAuthResponse } from '../../types/types';
 import { Router } from '@angular/router';
 import { deleteCookies } from '../../utils/cookie.utils';
 import { tap, Observable } from 'rxjs';
@@ -46,6 +46,23 @@ export class AuthService {
         this.router.navigate(['/auth/login']);
       })
     );
+  }
+
+  updateUserPlan() {
+    this._currentUser.update((user) => {
+      if (user) {
+        return { ...user, plan: 'premium' };
+      }
+      return user;
+    });
+  }
+
+  resetPassword(email: string): Observable<GenericAuthResponse> {
+    return this.apiService.post<GenericAuthResponse>('/auth/reset-password', { email });
+  }
+
+  resetPasswordConfirm(token: string, password: string): Observable<GenericAuthResponse> {
+    return this.apiService.post<GenericAuthResponse>(`/auth/reset-password-confirm/${token}`, { password });
   }
 
   private handleAuthSuccess(res: AuthResponse) {

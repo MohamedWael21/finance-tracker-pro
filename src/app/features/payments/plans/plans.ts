@@ -12,13 +12,14 @@ import {
 import { Button } from '../../../shared/components/ui/button/button';
 import { Badge } from '../../../shared/components/ui/badge/badge';
 import { Modal } from '../../../shared/components/ui/modal/modal';
+import { AuthService } from '../../../core/auth/auth.service';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [Card, CardHeader, CardTitle, CardContent, CardFooter, Button, Badge , Modal],
+  imports: [Card, CardHeader, CardTitle, CardContent, CardFooter, Button, Badge, Modal],
   templateUrl: './plans.html',
-  styleUrl: './plans.css',
 })
 export class Plans implements OnInit, OnDestroy {
   freeFeatures = [
@@ -47,6 +48,8 @@ export class Plans implements OnInit, OnDestroy {
 
   private paymentService = inject(PaymentService);
   private toast = inject(ToastService);
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
 
   loading = signal(false);
   stripeReady = signal(false);
@@ -98,7 +101,7 @@ export class Plans implements OnInit, OnDestroy {
 
     this.cardElement.mount('#card-element');
 
-    this.cardElement.on('change', (event) => {
+    this.cardElement.on('change', (event: any) => {
       this.cardError.set(event.error ? event.error.message : '');
     });
   }
@@ -126,12 +129,28 @@ export class Plans implements OnInit, OnDestroy {
         if (paymentIntent?.status === 'succeeded') {
           this.showPaymentForm.set(false);
           this.toast.success('🎉 Payment successful! You are now a Premium member.');
-          // Optionally: call UserService to refresh user plan
+          this.afterPaymentSuccess();
         }
       },
       error: (err) => {
         this.loading.set(false);
         this.toast.error(err?.error?.message ?? 'Could not initiate payment. Please try again.');
+      },
+    });
+  }
+
+  afterPaymentSuccess() {
+    this.userService.getProfile().subscribe({
+      next: ({ profile }) => {
+        profile.plan = 'premium';
+        const stored = localStorage.getItem('user');
+        if (stored) {
+          try {
+            const merged = { ...JSON.parse(stored), ...profile };
+            localStorage.setItem('user', JSON.stringify(merged));
+            this.authService.updateUserPlan();
+          } catch {}
+        }
       },
     });
   }

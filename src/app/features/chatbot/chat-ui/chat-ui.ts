@@ -1,7 +1,7 @@
 import { Component, inject, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChatbotService, ChatMessage } from '../chatbot.service';
-import {marked} from 'marked';
+import { marked } from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -65,17 +65,21 @@ export class ChatUi implements AfterViewChecked {
     this.loading.set(true);
 
     this.chatbot.sendMessage(this.messages()).subscribe({
-      next:async (res) => {
+      next: async (res) => {
+        const rawMarkdown = res.data;
         const html = await marked.parse(res.data);
-        const msg : SafeHtml = this.sanitizer.bypassSecurityTrustHtml(html);
-        const assistantMsg: ChatMessage = { role: 'assistant', content: msg };
+        const assistantMsg: ChatMessage = {
+          role: 'assistant',
+          content: rawMarkdown,
+          safeContent: this.sanitizer.bypassSecurityTrustHtml(html),
+        };
         this.messages.update((msgs) => [...msgs, assistantMsg]);
         this.loading.set(false);
         this.shouldScroll = true;
       },
       error: (err) => {
         this.loading.set(false);
-        console.log(err)
+        console.log(err);
         this.toast.error(err?.error?.message || 'Failed to get a response. Please try again.');
       },
     });

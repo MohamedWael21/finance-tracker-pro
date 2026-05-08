@@ -10,7 +10,7 @@ interface PaymentIntentResponse {
 
 interface UserResponse {
   success: boolean;
-  user: any;
+  profile: any;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +27,7 @@ export class PaymentService {
   }
 
   getUpdatedUser(): Observable<UserResponse> {
-    return this.http.get<UserResponse>(`${this.apiUrl}/auth/me`, {
+    return this.http.get<UserResponse>(`${this.apiUrl}/user/profile`, {
       withCredentials: true,
     });
   }
