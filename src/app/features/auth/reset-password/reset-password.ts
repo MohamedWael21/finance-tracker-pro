@@ -1,13 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Button } from '../../../shared/components/ui/button/button';
 import { Input as AppInput } from '../../../shared/components/ui/input/input';
 
 @Component({
   selector: 'app-reset-password',
-  imports: [ReactiveFormsModule, AppInput, Button],
+  imports: [ReactiveFormsModule, AppInput, Button, RouterLink],
   templateUrl: './reset-password.html',
   styleUrl: './reset-password.css',
 })

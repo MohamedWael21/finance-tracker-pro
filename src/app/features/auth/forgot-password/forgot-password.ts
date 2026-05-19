@@ -4,9 +4,11 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { Button } from '../../../shared/components/ui/button/button';
 import { Input as AppInput } from '../../../shared/components/ui/input/input';
 
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-forgot-password',
-  imports: [ReactiveFormsModule, AppInput, Button],
+  imports: [ReactiveFormsModule, AppInput, Button, RouterLink],
   templateUrl: './forgot-password.html',
   styleUrl: './forgot-password.css',
 })

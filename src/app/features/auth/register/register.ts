@@ -5,9 +5,11 @@ import { RegisterRequest } from '../../../types/types';
 import { Button } from '../../../shared/components/ui/button/button';
 import { Input as AppInput } from '../../../shared/components/ui/input/input';
 
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, AppInput, Button],
+  imports: [ReactiveFormsModule, AppInput, Button, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })

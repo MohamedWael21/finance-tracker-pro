@@ -5,9 +5,11 @@ import { LoginRequest } from '../../../types/types';
 import { Button } from '../../../shared/components/ui/button/button';
 import { Input as AppInput } from '../../../shared/components/ui/input/input';
 
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, AppInput, Button],
+  imports: [ReactiveFormsModule, AppInput, Button, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
