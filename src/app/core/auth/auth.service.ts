@@ -48,10 +48,10 @@ export class AuthService {
     );
   }
 
-  updateUserPlan() {
+  updateUserPlan(updatedUser?: Partial<User>) {
     this._currentUser.update((user) => {
       if (user) {
-        return { ...user, plan: 'premium' };
+        return { ...user, plan: 'premium', ...updatedUser };
       }
       return user;
     });
