@@ -6,6 +6,7 @@ export interface User {
   avatar?: { secure_url: string; public_id: string } | null;
   plan: 'free' | 'premium';
   createdAt?: string;
+  premiumStartedAt?: string;
 }
 
 export interface AuthResponse {

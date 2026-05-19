@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject, computed } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { loadStripe, Stripe, StripeElements, StripeCardElement } from '@stripe/stripe-js';
 import { PaymentService } from '../../../core/services/payment.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -18,7 +19,7 @@ import { UserService } from '../../../core/services/user.service';
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [Card, CardHeader, CardTitle, CardContent, CardFooter, Button, Badge, Modal],
+  imports: [Card, CardHeader, CardTitle, CardContent, CardFooter, Button, Badge, Modal, DatePipe],
   templateUrl: './plans.html',
 })
 export class Plans implements OnInit, OnDestroy {
@@ -38,18 +39,46 @@ export class Plans implements OnInit, OnDestroy {
   ];
 
   premiumFeatures = [
-    'Unlimited transactions',
+    'Basic budget tracking',
+    'Standard & custom categories',
+    'Unlimited transactions (No limit)',
+    'Full transaction history (Unlimited)',
     'Advanced reports & analytics',
     'Recurring transaction automation',
-    'Full transaction history',
     'Export to CSV / PDF',
-    'Priority support',
+    'Priority support 24/7',
   ];
 
   private paymentService = inject(PaymentService);
   private toast = inject(ToastService);
   private authService = inject(AuthService);
   private userService = inject(UserService);
+
+  user = computed(() => this.authService.currentUser());
+  isPremium = computed(() => this.authService.plan() === 'premium');
+
+  premiumStartDate = computed(() => {
+    const u = this.user();
+    if (!u) return null;
+    const dateStr = u.premiumStartedAt || u.createdAt;
+    return dateStr ? new Date(dateStr) : new Date();
+  });
+
+  premiumExpiryDate = computed(() => {
+    const start = this.premiumStartDate();
+    if (!start) return null;
+    const expiry = new Date(start);
+    expiry.setMonth(expiry.getMonth() + 1);
+    return expiry;
+  });
+
+  remainingDays = computed(() => {
+    const expiry = this.premiumExpiryDate();
+    if (!expiry) return 0;
+    const diffTime = expiry.getTime() - Date.now();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  });
 
   loading = signal(false);
   stripeReady = signal(false);
@@ -148,11 +177,15 @@ export class Plans implements OnInit, OnDestroy {
           try {
             const merged = { ...JSON.parse(stored), ...profile };
             localStorage.setItem('user', JSON.stringify(merged));
-            this.authService.updateUserPlan();
+            this.authService.updateUserPlan(merged);
           } catch {}
         }
       },
     });
+  }
+
+  renewSubscription() {
+    this.toast.success("Subscription renewal/management flow initiated (Premium plan is active!)");
   }
 
   cancelPayment() {
