@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
+import { environment } from '../../../environments/environment';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
@@ -17,7 +18,7 @@ export interface ChatApiResponse {
 @Injectable({ providedIn: 'root' })
 export class ChatbotService {
   private http = inject(HttpClient);
-  private endpoint = `http://localhost:5000/chatBot`;
+  private endpoint = environment.baseURL + '/chatBot';
 
   sendMessage(messages: ChatMessage[]): Observable<ChatApiResponse> {
     return this.http.post<ChatApiResponse>(
