@@ -91,6 +91,8 @@ export class Reports implements OnInit {
     this.avgSavings = this.avgIncome - this.avgExpenses;
 
     this.savingsRate = (this.avgSavings / this.avgIncome) * 100;
+
+    this.savingsRate = isNaN(this.savingsRate) ? 0 : this.savingsRate;
   }
 
   generateCategoryChart(transactions: any[]) {
