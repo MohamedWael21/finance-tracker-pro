@@ -35,7 +35,7 @@
         <h2 class="text-lg">Avg. Savings</h2>
         @if(avgSavings > 0){
           <p class="text-3xl font-semibold text-green-400">${{ avgSavings.toFixed(0) }}</p>
-        }else{
+        }@else{
           <p class="text-3xl font-semibold text-red-400">${{ avgSavings.toFixed(0) }}</p>
         }
         <span class="text-gray-400 text-sm">per month</span>
@@ -47,7 +47,7 @@
         @if(savingsRate > 0){
           <p class="text-3xl text-green-400 font-semibold">{{ savingsRate.toFixed(1) }}%</p>
         }
-        else{
+        @else{
           <p class="text-3xl text-red-400 font-semibold">{{ savingsRate.toFixed(1) }}%</p>
         }
         <span class="text-gray-400 text-sm">per month</span>
