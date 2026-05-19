@@ -33,14 +33,23 @@
     <app-card>
       <div class="flex my-4 gap-4 flex-col px-5">
         <h2 class="text-lg">Avg. Savings</h2>
-        <p class="text-3xl font-semibold text-green-400">${{ avgSavings.toFixed(0) }}</p>
+        @if(avgSavings > 0){
+          <p class="text-3xl font-semibold text-green-400">${{ avgSavings.toFixed(0) }}</p>
+        }else{
+          <p class="text-3xl font-semibold text-red-400">${{ avgSavings.toFixed(0) }}</p>
+        }
         <span class="text-gray-400 text-sm">per month</span>
       </div>
     </app-card>
     <app-card>
       <div class="flex my-4 gap-4 flex-col px-5">
         <h2 class="text-lg">Savings Rate</h2>
-        <p class="text-3xl text-green-400 font-semibold">{{ savingsRate.toFixed(1) }}%</p>
+        @if(savingsRate > 0){
+          <p class="text-3xl text-green-400 font-semibold">{{ savingsRate.toFixed(1) }}%</p>
+        }
+        else{
+          <p class="text-3xl text-red-400 font-semibold">{{ savingsRate.toFixed(1) }}%</p>
+        }
         <span class="text-gray-400 text-sm">per month</span>
       </div>
     </app-card>
