@@ -18,7 +18,7 @@ export interface ChatApiResponse {
 @Injectable({ providedIn: 'root' })
 export class ChatbotService {
   private http = inject(HttpClient);
-  private endpoint = environment.rawURL + 'chatBot';
+  private endpoint = environment.rawURL + '/chatBot';
 
   sendMessage(messages: ChatMessage[]): Observable<ChatApiResponse> {
     return this.http.post<ChatApiResponse>(
