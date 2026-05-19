@@ -26,15 +26,15 @@
         [error]="getErrorMessage('confirmPassword')"
         (valueChange)="registerForm.get('confirmPassword')?.setValue($event)"></app-input>
 
-      <app-button type="submit" [fullWidth]="true" class="mt-2">
-        Register
+      <app-button type="submit" [fullWidth]="true" [disabled]="isLoading()" class="mt-2">
+        {{ isLoading() ? 'Creating account...' : 'Register' }}
       </app-button>
     </form>
 
     <div class="register-footer mt-8 text-center">
       <p class="text-sm text-muted-foreground">
         Already have an account?
-        <a href="/auth/login" class="text-primary hover:underline font-medium">Log in</a>
+        <a routerLink="/auth/login" class="text-primary hover:underline font-medium">Log in</a>
       </p>
     </div>
   </div>

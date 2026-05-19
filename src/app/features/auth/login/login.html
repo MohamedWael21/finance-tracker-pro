@@ -19,18 +19,18 @@
         [error]="getErrorMessage('password')" (valueChange)="loginForm.get('password')?.setValue($event)"></app-input>
 
       <div class="flex items-center justify-end">
-        <a href="/auth/forgot-password" class="text-sm text-primary hover:underline">Forgot password?</a>
+        <a routerLink="/auth/forgot-password" class="text-sm text-primary hover:underline">Forgot password?</a>
       </div>
 
-      <app-button type="submit"  [fullWidth]="true"  class="mt-2">
-        Login
+      <app-button type="submit"  [fullWidth]="true" [disabled]="isLoading()" class="mt-2">
+        {{ isLoading() ? 'Logging in...' : 'Login' }}
       </app-button>
     </form>
 
     <div class="login-footer mt-8 text-center">
       <p class="text-sm text-muted-foreground">
         Don't have an account?
-        <a href="/auth/register" class="text-primary hover:underline font-medium">Create an account</a>
+        <a routerLink="/auth/register" class="text-primary hover:underline font-medium">Create an account</a>
       </p>
     </div>
   </div>
