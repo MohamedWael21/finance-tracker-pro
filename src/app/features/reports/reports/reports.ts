@@ -74,23 +74,25 @@ export class Reports implements OnInit {
       months.add(monthKey);
 
       if (transaction.type === 'income') {
-        totalIncome += transaction.amount;
+        totalIncome += Number(transaction.amount) || 0;
       }
 
       if (transaction.type === 'expense') {
-        totalExpenses += transaction.amount;
+        totalExpenses += Number(transaction.amount) || 0;
       }
     });
 
     const totalMonths = months.size || 1;
 
-    this.avgIncome = totalIncome / totalMonths;
+    this.avgIncome = totalIncome / totalMonths || 0;
 
-    this.avgExpenses = totalExpenses / totalMonths;
+    this.avgExpenses = totalExpenses / totalMonths || 0;
 
     this.avgSavings = this.avgIncome - this.avgExpenses;
 
-    this.savingsRate = (this.avgSavings / this.avgIncome) * 100;
+    this.savingsRate = this.avgIncome > 0 ? (this.avgSavings / this.avgIncome) * 100 : 0;
+
+    this.savingsRate = isFinite(this.savingsRate) ? this.savingsRate : 0;
   }
 
   generateCategoryChart(transactions: any[]) {
@@ -101,9 +103,9 @@ export class Reports implements OnInit {
         const category = transaction.category.type;
 
         if (categoryMap[category]) {
-          categoryMap[category] += transaction.amount;
+          categoryMap[category] += Number(transaction.amount) || 0;
         } else {
-          categoryMap[category] = transaction.amount;
+          categoryMap[category] = Number(transaction.amount) || 0;
         }
       }
     });
@@ -131,11 +133,11 @@ export class Reports implements OnInit {
       const month = date.getMonth();
 
       if (transaction.type === 'income') {
-        monthlyIncome[month] += transaction.amount;
+        monthlyIncome[month] += Number(transaction.amount) || 0;
       }
 
       if (transaction.type === 'expense') {
-        monthlyExpenses[month] += transaction.amount;
+        monthlyExpenses[month] += Number(transaction.amount) || 0;
       }
     });
 
