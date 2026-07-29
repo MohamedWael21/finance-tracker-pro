@@ -251,6 +251,3 @@ This project is maintained by the Finance Tracker team named above in the README
 
 Special credit goes to everyone who contributed to this project.
 
----
-
-Built as a collaborative finance management project for practical full-stack delivery, architecture clarity, and portfolio presentation.
